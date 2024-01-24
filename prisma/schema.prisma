@@ -16,4 +16,6 @@ model User {
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
+
+  @@index([username])
 }

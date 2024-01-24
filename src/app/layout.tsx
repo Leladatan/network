@@ -3,8 +3,11 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import {NextFont} from "next/dist/compiled/@next/font";
 import {Toaster} from "@/components/ui/toaster";
-import {SessionProvider} from "next-auth/react";
 import AuthProvider from "@/providers/auth/auth-provider";
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import ThemesProvider from "@/providers/theme/theme-provider";
+import ModalProvider from "@/providers/modal/modal-provider";
 
 const inter: NextFont = Inter({ subsets: ["latin"] });
 
@@ -13,17 +16,22 @@ export const metadata: Metadata = {
   description: "Sociality desc",
 };
 
-export default function RootLayout({
-  children,
+export default async function RootLayout({
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <Toaster />
-          {children}
+        <AuthProvider session={session}>
+          <ThemesProvider>
+            <ModalProvider />
+            <Toaster />
+            {children}
+          </ThemesProvider>
         </AuthProvider>
       </body>
     </html>

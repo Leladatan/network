@@ -18,7 +18,7 @@ async function login(credentials: Record<string, string>): Promise<User | null |
 
     const isCorrect: boolean = await bcrypt.compare(credentials.password, user.password);
 
-    if (!isCorrect) throw new Error("Wrong Credentials.");
+    if (!isCorrect) new Error("Wrong Credentials.");
 
     return user;
   } catch (err) {
@@ -51,8 +51,6 @@ export const authOptions= {
         token.email = user.email;
         token.id = user.id;
       }
-      console.log(user);
-      console.log("jwt", token);
       return token;
     },
     async session({session, token}: {session: any, token: any}): Promise<any> {
@@ -61,10 +59,10 @@ export const authOptions= {
         session.user.email = token.email;
         session.user.id = token.id;
       }
-      console.log("session", session);
       return session;
     }
-  }
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
