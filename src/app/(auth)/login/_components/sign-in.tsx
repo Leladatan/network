@@ -41,6 +41,7 @@ const SignIn = () => {
           });
           return;
         }
+
         toast({
           title: "Everything went well",
           description: "You have successfully logged in",
@@ -48,7 +49,6 @@ const SignIn = () => {
       }
 
       router.push("/");
-
     } catch (err: unknown) {
       console.error(err);
     } finally {
@@ -90,7 +90,7 @@ const SignIn = () => {
           </div>
         </div>
       </div>
-      <Button className="text-md px-10" variant={"secondary"} size={"lg"} disabled={isDisabled || isLoading}>
+      <Button className="text-md px-10" size={"lg"} disabled={isDisabled || isLoading}>
         Sign in
       </Button>
     </form>

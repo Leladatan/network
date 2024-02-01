@@ -1,21 +1,28 @@
 import {create} from "zustand";
 import {User} from "@/types/user";
+import {Comment} from "@prisma/client";
 
 export type ModalType =
   "accept" |
   "accept-password" |
-  "accept-danger-zone";
+  "accept-danger-zone" |
+  "upload" |
+  "upload-avatar" |
+  "upload-banner" |
+  "comments";
 
 interface ModalData {
   user?: User;
+  comments?: Comment[];
 }
 
 interface ModalStore {
   type: ModalType | null;
   data: ModalData;
   isOpen: boolean;
-  onOpen: (type: ModalType, data?: ModalData) => void;
+  onOpen: (type: ModalType, data?: ModalData, func?: () => void) => void;
   onClose: () => void;
+  func?: () => void
 }
 
 export const useModal = create<ModalStore>((set) => ({
@@ -23,5 +30,5 @@ export const useModal = create<ModalStore>((set) => ({
   data: {},
   isOpen: false,
   onClose: () => set({type: null, isOpen: false}),
-  onOpen: (type: ModalType, data: ModalData = {}) => set({type, isOpen: true, data}),
+  onOpen: (type: ModalType, data: ModalData = {}, func: (() => void) | undefined) => set({type, isOpen: true, data, func}),
 }));

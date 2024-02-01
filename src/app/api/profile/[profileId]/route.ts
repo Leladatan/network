@@ -17,7 +17,7 @@ export const DELETE = async (req: Request, {params}: {params: {profileId: string
 
     return NextResponse.json(user);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return new NextResponse("Internal error", {status: 500});
   }
 };

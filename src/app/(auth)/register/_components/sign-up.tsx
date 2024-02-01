@@ -101,7 +101,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-      <Button className="text-md px-10" variant={"secondary"} size={"lg"} disabled={isDisabled || isLoading}>
+      <Button className="text-md px-10" size={"lg"} disabled={isDisabled || isLoading}>
         Sign up
       </Button>
     </form>

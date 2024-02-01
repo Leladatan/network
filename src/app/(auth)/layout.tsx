@@ -3,7 +3,7 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {redirect} from "next/navigation";
 import Banner from "@/app/(auth)/_components/banner";
 import type {Metadata} from "next";
-import {RandomBanner} from "@/utils/functions/randomBanner";
+import {RandomBanner} from "@/utils/functions/random-banner";
 import {Banners} from "@/utils/constants/banners";
 
 export const metadata: Metadata = {

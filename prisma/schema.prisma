@@ -9,13 +9,127 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  username String @unique
-  email    String @unique
+  id       String  @id @default(uuid())
+  username String  @unique
+  status   String  @default("")
+  online   Boolean @default(false)
+  email    String  @unique
+  avatar   String  @default("https://utfs.io/f/9c52e5e6-ccc9-42ee-9a67-af8a3329a746-uao75v.jpg")
+  banner   String? @db.Text
   password String
+
+  posts       Post[]       @relation("Posts")
+  other_posts Post[]       @relation("OtherPosts")
+  liked       Liked_Post[] @relation("LikedPost")
+
+  comments Comment[] @relation("CommentUser")
+
+  subscribers      Subscriber[] @relation("UserSubscriber")
+  subscriber_users Subscriber[] @relation("SubscriberInUser")
+
+  notifications         Notification[] @relation("UserNotification")
+  notifications_subject Notification[] @relation("UserSubjectNotification")
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
-  @@index([username])
+  @@index([id])
+}
+
+model Post {
+  id    String @id @default(uuid())
+  title String
+
+  userId String
+  user   User   @relation("Posts", fields: [userId], references: [id])
+
+  authorId String
+  author   User   @relation("OtherPosts", fields: [authorId], references: [id])
+
+  likes Int          @default(0)
+  liked Liked_Post[] @relation("LikedUser")
+
+  isEdited Boolean @default(false)
+
+  comments Comment[] @relation("CommentsPost")
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([authorId])
+}
+
+model Liked_Post {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation("LikedPost", fields: [userId], references: [id])
+
+  postId String
+  post   Post   @relation("LikedUser", onDelete: Cascade, fields: [postId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
+}
+
+model Comment {
+  id String @id @default(uuid())
+
+  title String
+
+  authorId String
+  author   User   @relation("CommentUser", fields: [authorId], references: [id])
+
+  postId String
+  post   Post   @relation("CommentsPost", fields: [postId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([postId])
+}
+
+model Subscriber {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation("UserSubscriber", fields: [userId], references: [id])
+
+  subscriberId String
+  subscriber   User   @relation("SubscriberInUser", fields: [subscriberId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([subscriberId])
+}
+
+enum TypeNotification {
+  friend_add
+  like_add
+  comment_add
+}
+
+model Notification {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation("UserNotification", fields: [userId], references: [id])
+
+  subject_userId String
+  subject_user   User   @relation("UserSubjectNotification", fields: [subject_userId], references: [id])
+
+  type TypeNotification
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([subject_userId])
 }

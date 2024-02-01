@@ -9,7 +9,7 @@ async function login(credentials: Record<string, string>): Promise<User | null |
     const user: User | null = await db.user.findUnique({
       where: {
         email: credentials.email
-      }
+      },
     });
 
     if (!user) {
@@ -18,7 +18,7 @@ async function login(credentials: Record<string, string>): Promise<User | null |
 
     const isCorrect: boolean = await bcrypt.compare(credentials.password, user.password);
 
-    if (!isCorrect) new Error("Wrong Credentials.");
+    if (!isCorrect) throw new Error("Wrong Credentials.");
 
     return user;
   } catch (err) {

@@ -12,7 +12,7 @@ const DangerZone = () => {
     <section className="flex flex-col gap-y-3">
       <h3>Danger zone</h3>
       <div className="w-1/2">
-        <Button onClick={() => onOpen("accept-password", {user})} variant={"destructive"}>
+        <Button onClick={() => onOpen("accept-danger-zone", {user})} variant={"destructive"}>
           Delete your profile
         </Button>
       </div>

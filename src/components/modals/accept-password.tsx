@@ -16,11 +16,14 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {ProfileSettings} from "@/actions/profile/settings/settings-id";
 import {useUser} from "@/hooks/use-user";
+import {useRouter} from "next/navigation";
 
 const AcceptPassword = () => {
   const {isOpen, onClose, type, data} = useModal();
   const {user} = data;
   const {user: OldUser} = useUser();
+
+  const router = useRouter();
 
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,7 +36,6 @@ const AcceptPassword = () => {
 
       if (user) {
         if (!user.username) {
-          console.log("id");
           await ProfileSettings({id: OldUser.id, newId: user.id});
         }
 
@@ -65,6 +67,7 @@ const AcceptPassword = () => {
         title: "The change was successful"
       });
 
+      router.refresh();
       setPassword("");
       onClose();
     } catch (err: any) {
