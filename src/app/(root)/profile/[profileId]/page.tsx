@@ -33,10 +33,15 @@ export async function generateMetadata({params: {profileId}}: Props): Promise<Me
 }
 
 export type UserWithSubscribers = Omit<User, "password"> & {
-  subscribers: SubscribersWithUser[]
+  subscribers: SubscribersWithUser[],
+  subscriptions: SubscriptionsWithUser[]
 };
 
 type SubscribersWithUser = Subscriber & {
+  user: Omit<User, "password">;
+};
+
+type SubscriptionsWithUser = Subscriber & {
   subscriber: Omit<User, "password">;
 };
 
@@ -55,6 +60,17 @@ const Page = async ({params}: {params: {profileId: string}}) => {
 
   const subscribers: SubscribersWithUser[] = await db.subscriber.findMany({
     where: {
+      subscriberId: user.id
+    },
+    include: {
+      user: {
+        select: exclude("user", ["password"]),
+      }
+    }
+  });
+
+  const subscriptions: SubscriptionsWithUser[] = await db.subscriber.findMany({
+    where: {
       userId: user.id,
     },
     include: {
@@ -64,7 +80,7 @@ const Page = async ({params}: {params: {profileId: string}}) => {
     }
   });
 
-  const profile: UserWithSubscribers = {...user, subscribers};
+  const profile: UserWithSubscribers = {...user, subscribers, subscriptions};
 
   return (
     <ProfileIdPage {...profile} />

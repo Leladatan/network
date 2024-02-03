@@ -7,6 +7,9 @@ export const DELETE = async (req: Request, {params}: {params: {profileId: string
     const userId: string = params.profileId;
     const postId: string = params.postId;
 
+    console.log(userId);
+    console.log(postId);
+
     if (!userId) {
       return new NextResponse("Unauthenticated", {status: 401});
     }
@@ -14,6 +17,8 @@ export const DELETE = async (req: Request, {params}: {params: {profileId: string
     if (!postId) {
       return new NextResponse("Not found post", {status: 404});
     }
+
+
 
     const post = await db.post.deleteMany({
       where: {

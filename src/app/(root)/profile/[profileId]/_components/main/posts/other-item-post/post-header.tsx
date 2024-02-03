@@ -59,7 +59,7 @@ const PostHeader = ({post, handlerActions, setIsEdit, isLoading}: props) => {
             </Avatar>
             {post.author.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full"/>}
           </Link>
-          <h4><Link href={`${origin}/profile/${post.author.id}`}>{post.author.username}</Link></h4>
+          <h4 className="break-all"><Link href={`${origin}/profile/${post.author.id}`}>{post.author.username}</Link></h4>
         </div>
         <span className="text-neutral-400">{getFormatData(new Date(post.createdAt))}</span>
       </div>

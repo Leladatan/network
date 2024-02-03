@@ -5,7 +5,7 @@ import {Liked_Post, Post} from "@prisma/client";
 export const PATCH = async (req: Request, {params}: {params: {postId: string}}) => {
   try {
     const id: string = params.postId;
-    const {action, userId} = await req.json();
+    const {action, userId, authorId} = await req.json();
 
     if (!action) {
       return new NextResponse("Action type required", {status: 400});
@@ -33,6 +33,16 @@ export const PATCH = async (req: Request, {params}: {params: {postId: string}}) 
           postId: id
         }
       });
+
+      if (authorId !== userId) {
+        await db.notification.create({
+          data: {
+            userId: authorId,
+            subject_userId: userId,
+            type: "like_add"
+          }
+        });
+      }
 
       return NextResponse.json(post);
     }

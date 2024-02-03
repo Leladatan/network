@@ -17,7 +17,6 @@ type props = {
 const PostContent = ({handlerActions, isEdit, setIsEdit, post, isLoading}: props) => {
   const [value, setValue] = useState<string>(post.title);
 
-
   return (
     <div className="flex flex-col gap-y-4 px-4 pb-4">
       {isEdit ?

@@ -9,15 +9,15 @@ import {db} from "@/lib/db";
 const Layout = async ({children}: {children: React.ReactNode}) => {
   const session = await getServerSession(authOptions);
 
+  if (!session) {
+    redirect("/login");
+  }
+
   const notifications: Notification[] = await db.notification.findMany({
     where: {
       userId: session.user.id
     },
   });
-
-  if (!session) {
-    redirect("/login");
-  }
 
   return (
     <main className="flex gap-x-10 w-full h-full py-4 px-8">

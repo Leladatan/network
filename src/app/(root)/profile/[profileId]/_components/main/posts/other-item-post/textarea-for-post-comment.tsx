@@ -14,16 +14,17 @@ type props = {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   postId: string;
   currentUser: string;
+  authorId: string;
 }
 
-const TextareaForPostComment = ({isLoading, setIsLoading, setIsComment, postId, currentUser}: props) => {
+const TextareaForPostComment = ({isLoading, setIsLoading, setIsComment, postId, currentUser, authorId}: props) => {
   const [comment, setComment] = useState<string>("");
   const router = useRouter();
 
   const commentAdd = async (userId: string, postId: string) => {
     try {
       setIsLoading(true);
-      await PostCommentAdd(userId, postId, comment);
+      await PostCommentAdd(userId, postId, {title: comment, userId: authorId});
       setIsComment(false);
       toast({
         title: "Comment created"

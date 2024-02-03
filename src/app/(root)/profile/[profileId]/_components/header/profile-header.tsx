@@ -22,6 +22,7 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
   const router = useRouter();
   const {theme} = useTheme();
   const [isHover, setIsHover] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
 
   const isOwner: boolean = currentUser.id === user.id;
@@ -121,14 +122,20 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
         return;
       }
 
-      const subscriber = await IsSubscriberThisUser(user.id, currentUser.id);
+      try {
+        const subscriber = await IsSubscriberThisUser(user.id, currentUser.id);
 
-      if (!subscriber.data) {
-        setIsSubscribed(false);
-        return;
+        if (!subscriber.data) {
+          setIsSubscribed(false);
+          return;
+        }
+
+        setIsSubscribed(true);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsSubscribed(true);
     })();
   }, []);
 
@@ -144,34 +151,34 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
           : {backgroundColor: "transparent"}}
       >
         {isHover &&
-          <Button
-            variant={"ghost"}
-            className="absolute top-5 right-5 backdrop-blur animate-appear"
-            onClick={() => onOpen("upload-banner", {user})}
-          >
-            Edit banner
-          </Button>}
+            <Button
+                variant={"ghost"}
+                className="absolute top-5 right-5 backdrop-blur animate-appear"
+                onClick={() => onOpen("upload-banner", {user})}
+            >
+                Edit banner
+            </Button>}
       </div>
       <div className="absolute -bottom-24 flex gap-x-4 w-full">
         {user.avatar &&
-          <ProfileAvatar user={user} actions={ContextMenuItems} type={"default"}/>
+            <ProfileAvatar user={user} actions={ContextMenuItems} type={"default"}/>
         }
         <div className="self-end flex justify-between gap-x-2 pb-6 w-full">
           <div className="flex flex-col gap-y-3">
             <p className="text-xl">{user.username}</p>
             <p>{user.status}</p>
           </div>
-          {!isOwner &&
+          {(!isOwner && !isLoading) &&
             (!isSubscribed ?
-              <Button onClick={() => handlerAddSubscriber()}>
+              <Button disabled={isLoading} onClick={() => handlerAddSubscriber()}>
                 Subscribe
               </Button> :
-              <Button onClick={() => handlerDeleteSubscriber()}>
+              <Button disabled={isLoading} onClick={() => handlerDeleteSubscriber()}>
                 Unsubscribe
               </Button>)
           }
           {isOwner && <Button onClick={() => router.push("/edit")}>
-            Edit profile
+              Edit profile
           </Button>}
         </div>
       </div>

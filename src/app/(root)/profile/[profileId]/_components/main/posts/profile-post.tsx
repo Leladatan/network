@@ -18,7 +18,7 @@ import {Button} from "@/components/ui/button";
 import {ChangeLike} from "@/actions/like/change-like";
 import {IsLikeLikedPost} from "@/actions/like/is-like";
 import {useSession} from "next-auth/react";
-import PostComments from "@/app/(root)/profile/[profileId]/_components/main/posts/other-item-post/post-comments";
+import PostComments from "@/app/(root)/profile/[profileId]/_components/main/posts/other-item-post/comments/post-comments";
 import TextareaForPostComment
   from "@/app/(root)/profile/[profileId]/_components/main/posts/other-item-post/textarea-for-post-comment";
 import PostHeader from "@/app/(root)/profile/[profileId]/_components/main/posts/other-item-post/post-header";
@@ -105,14 +105,14 @@ const ProfilePost = ({post}: {
   const handleLike = async () => {
     try {
       if (isLike) {
-        await ChangeLike(post.id, {action: "dislike", userId: currentUser.id});
+        await ChangeLike(post.id, {action: "dislike", userId: currentUser.id, authorId: post.authorId});
         toast({
           title: "The dislike was successfully generated"
         });
       }
 
       if (!isLike) {
-        await ChangeLike(post.id, {action: "like", userId: currentUser.id});
+        await ChangeLike(post.id, {action: "like", userId: currentUser.id, authorId: post.authorId});
         toast({
           title: "The like was successfully generated"
         });
@@ -184,7 +184,7 @@ const ProfilePost = ({post}: {
           </DropdownMenu>
         </div>
         {isViewComment &&
-          <PostComments post={post}/>
+          <PostComments post={post} setIsViewComment={setIsViewComment} />
         }
       </div>
       {isComment &&
@@ -194,6 +194,7 @@ const ProfilePost = ({post}: {
           isLoading={isLoading}
           postId={post.id}
           currentUser={currentUser.id}
+          authorId={post.authorId}
         />
       }
     </>

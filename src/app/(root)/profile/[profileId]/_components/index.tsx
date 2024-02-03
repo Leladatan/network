@@ -10,7 +10,7 @@ export type PostWithUser = Post & {
   comments: CommentWithUser[];
 };
 
-type CommentWithUser = Comment & {
+export type CommentWithUser = Comment & {
   author: Omit<User, "password">;
 };
 

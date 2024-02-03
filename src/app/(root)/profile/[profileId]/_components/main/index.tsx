@@ -88,7 +88,7 @@ const ProfileMain = ({posts, user, subscribers_online}: {
           To publish
         </Button>
         }
-        <ProfilePosts posts={posts}/>
+        <ProfilePosts posts={posts} />
       </div>
       <div className="flex flex-col gap-y-3 w-1/2">
         <ProfileSidebar user={user} />
