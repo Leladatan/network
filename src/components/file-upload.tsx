@@ -16,16 +16,18 @@ interface FileUploadProps {
 const FileUpload: FC<FileUploadProps> = ({onChange, value, endpoint}) => {
   const fileType: string | undefined = value?.split(".").pop();
 
-  if (value && fileType !== "pdf" && endpoint === "photos") {
+  console.log(value);
+
+  if (value && fileType !== "pdf"  && endpoint === "photos") {
     return (
       <div className={cn("relative h-60 w-60")}>
-        <Image
-          fill
-          src={value}
-          alt="Upload"
-          className={cn("object-center object-cover rounded")}
-          priority
-        />
+          <Image
+            fill
+            src={value}
+            alt="Upload"
+            className={cn("object-center object-cover rounded")}
+            priority
+          />
         <button
           onClick={() => onChange("")}
           className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"

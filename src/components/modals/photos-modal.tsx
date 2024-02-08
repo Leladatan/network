@@ -101,7 +101,8 @@ const PhotosModal: FC = () => {
                       />
                     </FormControl>
                   </FormItem>
-                )}
+                )
+                }
               />
             </div>
             <DialogFooter className="bg-gray-600 px-6 py-4">
