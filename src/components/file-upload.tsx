@@ -16,8 +16,6 @@ interface FileUploadProps {
 const FileUpload: FC<FileUploadProps> = ({onChange, value, endpoint}) => {
   const fileType: string | undefined = value?.split(".").pop();
 
-  console.log(value);
-
   if (value && fileType !== "pdf"  && endpoint === "photos") {
     return (
       <div className={cn("relative h-60 w-60")}>
