@@ -7,6 +7,7 @@ import AcceptDangerZoneModal from "@/components/modals/accept-danger-zone-modal"
 import AcceptPassword from "@/components/modals/accept-password";
 import BannerModal from "@/components/modals/banner-modal";
 import AvatarModal from "@/components/modals/avatar-modal";
+import PhotosModal from "@/components/modals/photos-modal";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -35,6 +36,7 @@ const ModalProvider = () => {
       <AcceptPassword />
       <BannerModal />
       <AvatarModal />
+      <PhotosModal />
     </>
   );
 };

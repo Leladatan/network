@@ -1,6 +1,6 @@
 import {Metadata} from "next";
 import {db} from "@/lib/db";
-import {Subscriber, User} from "@prisma/client";
+import {Friend, Photo, Subscriber, User} from "@prisma/client";
 import {redirect} from "next/navigation";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
@@ -33,8 +33,10 @@ export async function generateMetadata({params: {profileId}}: Props): Promise<Me
 }
 
 export type UserWithSubscribers = Omit<User, "password"> & {
-  subscribers: SubscribersWithUser[],
-  subscriptions: SubscriptionsWithUser[]
+  subscribers: SubscribersWithUser[];
+  subscriptions: SubscriptionsWithUser[];
+  friends: FriendWithUser[];
+  photos: Photo[];
 };
 
 type SubscribersWithUser = Subscriber & {
@@ -43,6 +45,10 @@ type SubscribersWithUser = Subscriber & {
 
 type SubscriptionsWithUser = Subscriber & {
   subscriber: Omit<User, "password">;
+};
+
+type FriendWithUser = Friend & {
+  friend: Omit<User, "password">;
 };
 
 const Page = async ({params}: {params: {profileId: string}}) => {
@@ -68,7 +74,7 @@ const Page = async ({params}: {params: {profileId: string}}) => {
       }
     }
   });
-
+  
   const subscriptions: SubscriptionsWithUser[] = await db.subscriber.findMany({
     where: {
       userId: user.id,
@@ -80,7 +86,27 @@ const Page = async ({params}: {params: {profileId: string}}) => {
     }
   });
 
-  const profile: UserWithSubscribers = {...user, subscribers, subscriptions};
+  const friends: FriendWithUser[] = await db.friend.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      friend: {
+        select: exclude("user", ["password"]),
+      }
+    }
+  });
+
+  const photos: Photo[] = await db.photo.findMany({
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      createdAt: "desc"
+    },
+  });
+
+  const profile: UserWithSubscribers = {...user, subscribers, subscriptions, friends, photos};
 
   return (
     <ProfileIdPage {...profile} />

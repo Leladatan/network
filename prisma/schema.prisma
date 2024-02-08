@@ -30,6 +30,12 @@ model User {
   notifications         Notification[] @relation("UserNotification")
   notifications_subject Notification[] @relation("UserSubjectNotification")
 
+  fried_object Friend[] @relation("UserWithFriend")
+  friends      Friend[] @relation("FriendWithUser")
+
+  photos Photo[] @relation("UserOwnerPhoto")
+  albums Album[] @relation("UserOwnerAlbum")
+
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
@@ -85,7 +91,7 @@ model Comment {
   author   User   @relation("CommentUser", fields: [authorId], references: [id])
 
   postId String
-  post   Post   @relation("CommentsPost", onDelete: Cascade,fields: [postId], references: [id])
+  post   Post   @relation("CommentsPost", onDelete: Cascade, fields: [postId], references: [id])
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
@@ -127,9 +133,61 @@ model Notification {
 
   type TypeNotification
 
+  checked Boolean @default(false)
+
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
   @@index([userId])
   @@index([subject_userId])
+}
+
+model Friend {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation("UserWithFriend", fields: [userId], references: [id])
+
+  friendId String
+  friend   User   @relation("FriendWithUser", fields: [friendId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([friendId])
+}
+
+model Photo {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation("UserOwnerPhoto", fields: [userId], references: [id])
+
+  photo String
+
+  albumId String?
+  album   Album?  @relation("PhotosInAlbum", fields: [albumId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([albumId])
+}
+
+model Album {
+  id String @id @default(uuid())
+
+  name String
+
+  userId String
+  user   User   @relation("UserOwnerAlbum", fields: [userId], references: [id])
+
+  photos Photo[] @relation("PhotosInAlbum")
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
 }

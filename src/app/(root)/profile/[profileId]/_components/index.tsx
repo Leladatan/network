@@ -34,7 +34,7 @@ const ProfileIdPage = async (user: UserWithSubscribers) => {
       },
     },
     orderBy: {
-      createdAt: "asc"
+      createdAt: "desc"
     }
   });
 

@@ -19,11 +19,13 @@ const Layout = async ({children}: {children: React.ReactNode}) => {
     },
   });
 
+  const notification_unchecked: number = notifications.filter(notification => !notification.checked).length;
+
   return (
     <main className="flex gap-x-10 w-full h-full py-4 px-8">
       <Sidebar/>
       <div className="flex flex-col gap-y-10 w-full">
-        <Header notifications={notifications} />
+        <Header notifications={notifications} count={notification_unchecked} />
         <main>
           {children}
         </main>

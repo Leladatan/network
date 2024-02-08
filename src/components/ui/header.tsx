@@ -7,9 +7,9 @@ import {useUser} from "@/hooks/use-user";
 import {setOffline} from "@/actions/offline/offline";
 
 import {Notification} from "@prisma/client";
-import NotificationHeader from "@/components/notification-header";
+import NotificationHeader from "@/components/notification/notification-header";
 
-const Header = ({notifications}: { notifications: Notification[] }) => {
+const Header = ({notifications, count}: { notifications: Notification[], count: number }) => {
   const {user} = useUser();
 
   const handleSignOut = async (): Promise<void> => {
@@ -26,7 +26,7 @@ const Header = ({notifications}: { notifications: Notification[] }) => {
           <li>{user.email}</li>
         </ul>
       </nav>
-      <NotificationHeader notifications={notifications} />
+      <NotificationHeader notifications={notifications} count={count} />
       <Button onClick={handleSignOut}>
         Sign out
       </Button>

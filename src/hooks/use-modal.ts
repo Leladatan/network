@@ -9,11 +9,13 @@ export type ModalType =
   "upload" |
   "upload-avatar" |
   "upload-banner" |
+  "upload-photos" |
   "comments";
 
 interface ModalData {
   user?: User;
   comments?: Comment[];
+  userId?: string;
 }
 
 interface ModalStore {

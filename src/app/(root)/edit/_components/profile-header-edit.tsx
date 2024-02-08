@@ -96,7 +96,7 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
     <div className="relative">
       <div
         className={cn("relative flex w-full h-72 rounded-xl", theme !== "light" && "mask")}
-        style={user.banner ? {backgroundImage: `url(${user.banner})`, backgroundSize: "cover"}
+        style={user.banner ? {backgroundImage: `url(${user.banner})`, backgroundSize: "cover", backgroundPosition: "center"}
           : {backgroundColor: "transparent"}}
       >
         <Button

@@ -20,6 +20,13 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
       }
     });
 
+    await db.photo.create({
+      data: {
+        photo: banner,
+        userId: id
+      }
+    });
+
     return NextResponse.json(user);
   } catch (err) {
     console.log(err);

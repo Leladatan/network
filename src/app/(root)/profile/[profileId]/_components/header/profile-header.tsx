@@ -12,9 +12,10 @@ import {useTheme} from "next-themes";
 import {cn} from "@/lib/utils";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
 import {useSession} from "next-auth/react";
-import {ProfileSubscriberAdd} from "@/actions/profile/friend/profile-friend-add";
-import {ProfileSubscriberDelete} from "@/actions/profile/friend/profile-friend-delete";
-import {IsSubscriberThisUser} from "@/actions/is-friend";
+import {ProfileSubscriberAdd} from "@/actions/profile/subscribe/profile-subscribe-add";
+import {ProfileSubscriberDelete} from "@/actions/profile/subscribe/profile-subscribe-delete";
+import {isFriendThisUser, IsSubscriberThisUser} from "@/actions/is-friend";
+import {rotate} from "next/dist/server/lib/squoosh/impl";
 
 const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -24,6 +25,7 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
   const [isHover, setIsHover] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+  const [isFriended, setIsFriended] = useState<boolean>(true);
 
   const isOwner: boolean = currentUser.id === user.id;
 
@@ -139,6 +141,29 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      if (isOwner) {
+        return;
+      }
+
+      try {
+        const friend = await isFriendThisUser(user.id, currentUser.id);
+
+        if (!friend.data) {
+          setIsFriended(false);
+          return;
+        }
+
+        setIsFriended(true);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
+
   return (
     <div className="relative">
       <div
@@ -147,39 +172,47 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
         }}
         onMouseOut={isOwner ? handleMouseOut : () => {
         }}
-        style={user.banner ? {backgroundImage: `url(${user.banner})`, backgroundSize: "cover"}
+        style={user.banner ? {backgroundImage: `url(${user.banner})`, backgroundSize: "cover", backgroundPosition: "center"}
           : {backgroundColor: "transparent"}}
       >
         {isHover &&
-            <Button
-                variant={"ghost"}
-                className="absolute top-5 right-5 backdrop-blur animate-appear"
-                onClick={() => onOpen("upload-banner", {user})}
-            >
-                Edit banner
-            </Button>}
+          <Button
+            variant={"ghost"}
+            className="absolute top-5 right-5 backdrop-blur animate-appear"
+            onClick={() => onOpen("upload-banner", {user})}
+          >
+            Edit banner
+          </Button>
+        }
       </div>
       <div className="absolute -bottom-24 flex gap-x-4 w-full">
         {user.avatar &&
-            <ProfileAvatar user={user} actions={ContextMenuItems} type={"default"}/>
+          <ProfileAvatar user={user} actions={ContextMenuItems} type={"default"}/>
         }
         <div className="self-end flex justify-between gap-x-2 pb-6 w-full">
           <div className="flex flex-col gap-y-3">
             <p className="text-xl">{user.username}</p>
             <p>{user.status}</p>
           </div>
-          {(!isOwner && !isLoading) &&
-            (!isSubscribed ?
-              <Button disabled={isLoading} onClick={() => handlerAddSubscriber()}>
-                Subscribe
-              </Button> :
-              <Button disabled={isLoading} onClick={() => handlerDeleteSubscriber()}>
-                Unsubscribe
-              </Button>)
+          {((!isOwner && !isLoading) && !isFriended) ?
+            !isSubscribed ?
+                <Button disabled={isLoading} onClick={() => handlerAddSubscriber()}>
+                  Subscribe
+                </Button> :
+                <Button disabled={isLoading} onClick={() => handlerDeleteSubscriber()}>
+                  Unsubscribe
+                </Button>
+            :
+            (isFriended && !isOwner) &&
+              <Button disabled={isLoading}>
+                Remove from Friends
+              </Button>
           }
-          {isOwner && <Button onClick={() => router.push("/edit")}>
+          {isOwner &&
+            <Button onClick={() => router.push("/edit")}>
               Edit profile
-          </Button>}
+            </Button>
+          }
         </div>
       </div>
     </div>

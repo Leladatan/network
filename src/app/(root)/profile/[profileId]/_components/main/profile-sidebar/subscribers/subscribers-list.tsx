@@ -7,7 +7,7 @@ import {SkewLoader} from "react-spinners";
 import {useOrigin} from "@/hooks/use-origin";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
 
-const Subscribers = ({user}: { user: UserWithSubscribers }) => {
+const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
   const origin: string = useOrigin();
 
   return (
@@ -64,4 +64,4 @@ const Subscribers = ({user}: { user: UserWithSubscribers }) => {
   );
 };
 
-export default Subscribers;
+export default SubscribersList;
