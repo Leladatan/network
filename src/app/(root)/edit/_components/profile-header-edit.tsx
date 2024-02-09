@@ -13,6 +13,7 @@ import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
 import {useTheme} from "next-themes";
 import {ProfileOptions} from "@/actions/profile/profile-options";
+import {ProfileBannerDelete} from "@/actions/profile/banner/profile-avatar-delete";
 
 const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
   const {onOpen, onClose} = useModal();
@@ -44,6 +45,25 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handlerDeleteBanner = async () => {
+    try {
+      await ProfileBannerDelete(user.id);
+
+      toast({
+        title: "Your banner has been successfully deleted"
+      });
+
+      router.refresh();
+      onClose();
+    } catch (err){
+      console.error(err);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong.",
+      });
     }
   };
 
@@ -101,10 +121,17 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
       >
         <Button
           variant={"ghost"}
-          className="absolute top-5 right-5 backdrop-blur animate-appear"
+          className="absolute top-5 right-60 backdrop-blur animate-appear"
           onClick={() => onOpen("upload-banner", {user})}
         >
           Edit banner
+        </Button>
+        <Button
+          variant={"ghost"}
+          className="absolute top-5 right-5 backdrop-blur animate-appear"
+          onClick={() => onOpen("accept", {user}, () => handlerDeleteBanner())}
+        >
+          Delete banner
         </Button>
       </div>
       <div className="absolute -bottom-28 flex gap-x-4 w-full">

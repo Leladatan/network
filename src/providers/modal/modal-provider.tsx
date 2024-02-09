@@ -8,6 +8,7 @@ import AcceptPassword from "@/components/modals/accept-password";
 import BannerModal from "@/components/modals/banner-modal";
 import AvatarModal from "@/components/modals/avatar-modal";
 import PhotosModal from "@/components/modals/photos-modal";
+import PhotoViewModal from "@/components/modals/photo-view-modal";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -37,6 +38,7 @@ const ModalProvider = () => {
       <BannerModal />
       <AvatarModal />
       <PhotosModal />
+      <PhotoViewModal />
     </>
   );
 };

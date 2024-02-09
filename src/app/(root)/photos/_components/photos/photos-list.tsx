@@ -11,6 +11,7 @@ import {Photo} from "@prisma/client";
 import {useModal} from "@/hooks/use-modal";
 import {PhotosDelete} from "@/actions/photos/photos-delete";
 import {toast} from "@/components/ui/use-toast";
+import {useRouter} from "next/navigation";
 
 const PhotosList = ({photos}: {photos: Photo[]}) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -19,6 +20,8 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [photosData, setPhotosData] = useState<Photo[]>(photos);
   const {onOpen, onClose} = useModal();
+
+  const router = useRouter();
 
   const handlerSelected = (photo: string): void => {
     const isSet: boolean = selected.includes(photo);
@@ -50,6 +53,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
         title: "The selected photos have been successfully deleted."
       });
 
+      router.refresh();
       onClose();
       setSelected([]);
       setIsSelect(false);
@@ -63,6 +67,12 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
       setIsLoading(false);
     }
   };
+
+  if (!(!!photos.length)) {
+    return (
+      <h3>Photos is empty</h3>
+    );
+  }
 
   return (
     <>
@@ -114,7 +124,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
       <div className="columns-7 gap-5">
         {photosData.map(photo => (
           <div key={photo.id} className="relative cursor-pointer"
-               onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("accept")}>
+               onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("photo-view", {photo})}>
             <Image
               src={photo.photo}
               alt={"Image"}

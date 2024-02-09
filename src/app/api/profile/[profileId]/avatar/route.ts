@@ -1,6 +1,8 @@
 import {NextResponse} from "next/server";
-import {User} from "@prisma/client";
+import {Photo, User} from "@prisma/client";
 import {db} from "@/lib/db";
+
+//todo: переписать связи для более адекватного удаления
 
 export const POST = async (req: Request, {params}: {params: {profileId: string}}) => {
   try {
@@ -9,6 +11,34 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
 
     if (!id) {
       return new NextResponse("Unauthenticated", {status: 401});
+    }
+
+    const photo: Photo | null = await db.photo.findFirst({
+      where: {
+        userId: id,
+        type: "avatar",
+      },
+    });
+
+    if (!photo) {
+      await db.photo.create({
+        data: {
+          photo: avatar,
+          userId: id,
+          type: "avatar"
+        }
+      });
+
+      const user: User = await db.user.update({
+        where: {
+          id
+        },
+        data: {
+          avatar
+        }
+      });
+
+      return NextResponse.json(user);
     }
 
     const user: User = await db.user.update({
@@ -20,10 +50,21 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
       }
     });
 
+    await db.photo.update({
+      where: {
+        id: photo.id,
+        userId: id,
+      },
+      data: {
+        type: null
+      }
+    });
+
     await db.photo.create({
       data: {
         photo: avatar,
-        userId: id
+        userId: id,
+        type: "avatar"
       }
     });
 

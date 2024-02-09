@@ -158,6 +158,12 @@ model Friend {
   @@index([friendId])
 }
 
+enum TypePhoto {
+  avatar
+  banner
+  post
+}
+
 model Photo {
   id String @id @default(uuid())
 
@@ -168,6 +174,8 @@ model Photo {
 
   albumId String?
   album   Album?  @relation("PhotosInAlbum", fields: [albumId], references: [id])
+
+  type TypePhoto?
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt

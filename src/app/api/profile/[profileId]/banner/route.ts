@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {User} from "@prisma/client";
+import {Photo, User} from "@prisma/client";
 import {db} from "@/lib/db";
 
 export const POST = async (req: Request, {params}: {params: {profileId: string}}) => {
@@ -11,6 +11,38 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
       return new NextResponse("Unauthenticated", {status: 401});
     }
 
+    if (!banner) {
+      return new NextResponse("Banner is required", {status: 400});
+    }
+
+    const photo: Photo | null = await db.photo.findFirst({
+      where: {
+        userId: id,
+        type: "banner",
+      },
+    });
+
+    if (!photo) {
+      await db.photo.create({
+        data: {
+          photo: banner,
+          userId: id,
+          type: "banner"
+        }
+      });
+
+      const user: User = await db.user.update({
+        where: {
+          id
+        },
+        data: {
+          banner
+        }
+      });
+
+      return NextResponse.json(user);
+    }
+
     const user: User = await db.user.update({
       where: {
         id
@@ -20,10 +52,21 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
       }
     });
 
+    await db.photo.update({
+      where: {
+        id: photo.id,
+        userId: id,
+      },
+      data: {
+        type: null
+      }
+    });
+
     await db.photo.create({
       data: {
         photo: banner,
-        userId: id
+        userId: id,
+        type: "banner"
       }
     });
 
@@ -48,6 +91,13 @@ export const DELETE = async (req: Request, {params}: {params: {profileId: string
       },
       data: {
         banner: null
+      }
+    });
+
+    await db.photo.deleteMany({
+      where: {
+        userId: id,
+        type: "banner",
       }
     });
 
