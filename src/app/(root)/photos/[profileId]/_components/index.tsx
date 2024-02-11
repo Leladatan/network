@@ -11,7 +11,7 @@ const ProfilePhotosPage = ({photos}: {photos: Photo[]}) => {
   return (
     <Tabs defaultValue={"photos"}>
       <TabsList>
-        <TabsTrigger value={"photos"}>Photos</TabsTrigger>
+        <TabsTrigger value={"photos"}>Photos ({photos.length})</TabsTrigger>
         <TabsTrigger value={"albums"}>Albums</TabsTrigger>
       </TabsList>
       <TabsContent value={"photos"}>

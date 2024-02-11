@@ -15,8 +15,21 @@ const Page = async () => {
     },
   });
 
+  const albums = await db.album.findMany({
+    where: {
+      userId: session.user.id
+    },
+    include: {
+      photos: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+
   return (
-    <PhotosPage photos={photos} />
+    <PhotosPage photos={photos} albums={albums} />
   );
 };
 

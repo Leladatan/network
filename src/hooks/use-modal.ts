@@ -11,6 +11,7 @@ export type ModalType =
   "upload-banner" |
   "upload-photos" |
   "photo-view" |
+  "album-add" |
   "comments";
 
 interface ModalData {

@@ -7,18 +7,18 @@ import Image from "next/image";
 import {cn} from "@/lib/utils";
 import {useSession} from "next-auth/react";
 import {useState} from "react";
-import {Photo} from "@prisma/client";
+import {Album} from "@prisma/client";
 import {useModal} from "@/hooks/use-modal";
 import {PhotosDelete} from "@/actions/photos/photos-delete";
 import {toast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
 
-const PhotosList = ({photos}: {photos: Photo[]}) => {
+const AlbumsList = ({albums}: { albums: Album[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const [isSelect, setIsSelect] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selected, setSelected] = useState<string[]>([]);
-  const [photosData, setPhotosData] = useState<Photo[]>(photos);
+  const [photosData, setPhotosData] = useState<Album[]>(albums);
   const {onOpen, onClose} = useModal();
 
   const router = useRouter();
@@ -45,12 +45,12 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
 
       await PhotosDelete(currentUser.id, selected);
 
-      const remainingItems: Photo[] = photos.filter(item => !selected.includes(item.id));
+      const remainingItems: Album[] = albums.filter(item => !selected.includes(item.id));
 
       setPhotosData(remainingItems);
 
       toast({
-        title: "The selected photos have been successfully deleted."
+        title: "The selected albums have been successfully deleted."
       });
 
       router.refresh();
@@ -68,7 +68,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
     }
   };
 
-  if (!(!!photos.length)) {
+  if (!(!!albums.length)) {
     return (
       <>
         <div className="flex justify-end items-center gap-x-4">
@@ -79,8 +79,8 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
           )}
           {!isSelect ? (
               <Button disabled={isLoading} variant={"ghost"}
-                      onClick={() => onOpen("upload-photos", {userId: photos[0].userId})}>
-                Download image
+                      onClick={() => onOpen("album-add", {userId: currentUser.id})}>
+                Add album
               </Button>
             )
             : (
@@ -116,10 +116,9 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <h3>Photos is empty</h3>
+        <h3>Albums is empty</h3>
       </>
-    )
-      ;
+    );
   }
 
   return (
@@ -132,8 +131,8 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
         )}
         {!isSelect ? (
             <Button disabled={isLoading} variant={"ghost"}
-                    onClick={() => onOpen("upload-photos", {userId: photos[0].userId})}>
-              Download image
+                    onClick={() => onOpen("upload-photos")}>
+              Add album
             </Button>
           )
           : (
@@ -170,11 +169,11 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
         </DropdownMenu>
       </div>
       <div className="columns-7 gap-5">
-        {photosData.map(photo => (
-          <div key={photo.id} className="relative cursor-pointer"
-               onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("photo-view", {photo})}>
+        {albums.map(album => (
+          <div key={album.id} className="relative cursor-pointer"
+               onClick={isSelect ? () => handlerSelected(album.id) : () => router.push(`/album/${album.id}`)}>
             <Image
-              src={photo.photo}
+              src={"./avatar.jpg"}
               alt={"Image"}
               width={300}
               height={100}
@@ -184,7 +183,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
             {isSelect && (
               <div
                 className={cn("absolute top-1 right-1 w-6 h-6 rounded-full border-2 border-emerald-500",
-                  selected.includes(photo.id) && "bg-emerald-500")}
+                  selected.includes(album.id) && "bg-emerald-500")}
               />
             )}
           </div>
@@ -194,4 +193,4 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
   );
 };
 
-export default PhotosList;
+export default AlbumsList;
