@@ -9,11 +9,12 @@ import {useSession} from "next-auth/react";
 import {useEffect, useState} from "react";
 import {Photo} from "@prisma/client";
 import {useModal} from "@/hooks/use-modal";
-import {PhotosDelete} from "@/actions/photos/photos-delete";
 import {toast} from "@/components/ui/use-toast";
-import {useRouter} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
+import {AlbumPhotosDelete} from "@/actions/album/album-photos-delete";
+import Box from "@/components/ui/box";
 
-const PhotosList = ({photos}: {photos: Photo[]}) => {
+const AlbumPhotosList = ({photos}: {photos: Photo[]}) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const [isSelect, setIsSelect] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,6 +22,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
   const [photosData, setPhotosData] = useState<Photo[]>(photos);
   const {onOpen, onClose} = useModal();
 
+  const params = useParams();
   const router = useRouter();
 
   const handlerSelected = (photo: string): void => {
@@ -43,7 +45,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
     try {
       setIsLoading(true);
 
-      await PhotosDelete(currentUser.id, selected);
+      await AlbumPhotosDelete(currentUser.id, selected);
 
       const remainingItems: Photo[] = photos.filter(item => !selected.includes(item.id));
 
@@ -75,9 +77,9 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
     setPhotosData(photos);
   }, [photos]);
 
-  if (!(!!photos.length)) {
+  if (!(!!photos)) {
     return (
-      <>
+      <Box>
         <div className="flex justify-end items-center gap-x-4">
           {isSelect && (
             <p className="flex items-start justify-start">
@@ -86,7 +88,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
           )}
           {!isSelect ? (
               <Button disabled={isLoading} variant={"ghost"}
-                      onClick={() => onOpen("upload-photos", {userId: currentUser.id})}>
+                      onClick={() => onOpen("upload-album-photos", {userId: currentUser.id, albumId: params.albumId as string})}>
                 Download image
               </Button>
             )
@@ -104,7 +106,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {isSelect ?
-                <DropdownMenuItem disabled={isLoading || !(!!selected.length)} className="flex items-center gap-x-2 text-rose-500"
+                <DropdownMenuItem disabled={isLoading} className="flex items-center gap-x-2 text-rose-500"
                                   onClick={() => onOpen("accept", {}, () => handlerDeleted)}>
                   <Trash/>
                   <p>
@@ -124,12 +126,12 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
           </DropdownMenu>
         </div>
         <h3>Photos is empty</h3>
-      </>
+      </Box>
     );
   }
 
   return (
-    <>
+    <Box>
       <div className="flex justify-end items-center gap-x-4">
         {isSelect && (
           <p className="flex items-start justify-start">
@@ -138,7 +140,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
         )}
         {!isSelect ? (
             <Button disabled={isLoading} variant={"ghost"}
-                    onClick={() => onOpen("upload-photos", {userId: currentUser.id})}>
+                    onClick={() => onOpen("upload-album-photos", {userId: currentUser.id, albumId: params.albumId as string})}>
               Download image
             </Button>
           )
@@ -156,7 +158,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {isSelect ?
-              <DropdownMenuItem disabled={isLoading || !(!!selected.length)} className="flex items-center gap-x-2 text-rose-500"
+              <DropdownMenuItem disabled={isLoading} className="flex items-center gap-x-2 text-rose-500"
                                 onClick={() => onOpen("accept", {}, () => handlerDeleted())}>
                 <Trash/>
                 <p>
@@ -176,8 +178,8 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
         </DropdownMenu>
       </div>
       <div className="columns-7">
-        {photosData.map((photo,index) => (
-          <div key={index} className="relative cursor-pointer"
+        {photosData.map((photo) => (
+          <div key={photo.id} className="relative cursor-pointer"
                onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("photo-view", {photo})}>
             <Image
               src={photo.photo}
@@ -185,7 +187,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
               width={300}
               height={100}
               quality={100}
-              className="w-full mb-5"
+              className="w-full"
             />
             {isSelect && (
               <div
@@ -196,8 +198,8 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
           </div>
         ))}
       </div>
-    </>
+    </Box>
   );
 };
 
-export default PhotosList;
+export default AlbumPhotosList;

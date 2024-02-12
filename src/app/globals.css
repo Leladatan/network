@@ -6,6 +6,10 @@
  -webkit-mask: -webkit-linear-gradient(#000 75%,#0002 95%,#0000);
 }
 
+div[role] {
+  border: none;
+}
+
 @layer color {
   :root {
     --background: 0 0% 100%;

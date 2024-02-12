@@ -11,19 +11,21 @@ import {maxLengthForPostTitle} from "@/utils/constants/maxLength";
 import {Button} from "@/components/ui/button";
 import {useMemo, useState} from "react";
 import {CommentWithUser} from "@/app/(root)/profile/[profileId]/_components";
-import {usePathname, useRouter} from "next/navigation";
+import {useParams, usePathname, useRouter} from "next/navigation";
 import {PostCommentDelete} from "@/actions/profile/post/comment/post-comment-delete";
 import {toast} from "@/components/ui/use-toast";
 import {PostCommentEdit} from "@/actions/profile/post/comment/post-comment-edit";
 import {useSession} from "next-auth/react";
+import {cn} from "@/lib/utils";
 
 const PostCommentItem = ({comment}: {comment: CommentWithUser}) => {
   const [value, setValue] = useState<string>(comment.title);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const pathname = usePathname().slice(9);
+  const params = useParams();
 
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
-  const isOwnerComment: boolean = currentUser.id === comment.authorId || currentUser.id === pathname;
+  const isOwnerComment: boolean = currentUser.id === comment.authorId;
+  const isOwner: boolean = currentUser.id === params.profileId;
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
@@ -116,7 +118,7 @@ const PostCommentItem = ({comment}: {comment: CommentWithUser}) => {
                     <DropdownMenuItem
                       key={action.label}
                       onClick={() => action.handler(comment.postId, comment.id)}
-                      className="flex items-center gap-x-2"
+                      className={cn("flex items-center gap-x-2", action.label === "Delete" && "text-rose-500")}
                       disabled={isLoading}
                     >
                       <action.icon size={15}/>
@@ -127,6 +129,28 @@ const PostCommentItem = ({comment}: {comment: CommentWithUser}) => {
                   ))}
                 </DropdownMenuContent>
             </DropdownMenu>
+        }
+        {(isOwner && !isOwnerComment) &&
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MoreHorizontal size={20}/>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {actions.filter(item => item.label !== "Edit").map(action => (
+                <DropdownMenuItem
+                  key={action.label}
+                  onClick={() => action.handler(comment.postId, comment.id)}
+                  className="flex items-center gap-x-2 text-rose-500"
+                  disabled={isLoading}
+                >
+                  <action.icon size={15}/>
+                  <p>
+                    {action.label}
+                  </p>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         }
       </div>
       <div className="my-2">

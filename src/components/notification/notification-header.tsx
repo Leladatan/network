@@ -12,14 +12,17 @@ import {Separator} from "@/components/ui/separator";
 import {Notification} from "@prisma/client";
 import NotificationItem from "@/components/notification/notification-item";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import {useColor} from "@/hooks/use-color";
 
 const NotificationHeader = ({notifications, count}: { notifications: Notification[], count: number }) => {
+  const {color} = useColor();
+
   return (
-    <div>
+    <div className={color}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="relative">
-            <Bell className="cursor-pointer"/>
+            <Bell className="text-primary cursor-pointer"/>
             {!!count && (
               <>
                 <div className="absolute bg-rose-500 w-3 h-3 -top-1 -right-1 rounded-full cursor-pointer"/>

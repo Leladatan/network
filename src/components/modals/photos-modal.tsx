@@ -20,6 +20,7 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import {useModal} from "@/hooks/use-modal";
 import {toast} from "@/components/ui/use-toast";
 import {PhotosAdd} from "@/actions/photos/photos-add";
+import {AlbumPhotosAdd} from "@/actions/album/album-photos-add";
 
 const formSchema = z.object({
   photos: z.string().min(1),
@@ -28,7 +29,7 @@ const formSchema = z.object({
 const PhotosModal: FC = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const {isOpen, onClose, type, data} = useModal();
-  const {userId} = data;
+  const {userId, albumId} = data;
   const router: AppRouterInstance = useRouter();
 
   useEffect((): void => {
@@ -43,12 +44,18 @@ const PhotosModal: FC = () => {
   });
 
   const isSubmitting: boolean = form.formState.isSubmitting;
-  const isOpenModal: boolean = isOpen && type === "upload-photos";
+  const isOpenModal: boolean = isOpen && type === "upload-photos" ||  isOpen && type === "upload-album-photos";
 
   const onSubmit = async (values: z.infer<typeof formSchema>): Promise<void> => {
     try {
       if (userId) {
-        await PhotosAdd(userId, values);
+        if (type === "upload-album-photos" && albumId) {
+          await AlbumPhotosAdd(userId, albumId, values);
+        }
+
+        if (type === "upload-photos") {
+          await PhotosAdd(userId, values);
+        }
       }
 
       toast({

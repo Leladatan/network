@@ -16,6 +16,7 @@ import {ProfileSubscriberAdd} from "@/actions/profile/subscribe/profile-subscrib
 import {ProfileSubscriberDelete} from "@/actions/profile/subscribe/profile-subscribe-delete";
 import {isFriendThisUser, IsSubscriberThisUser} from "@/actions/is-friend";
 import {rotate} from "next/dist/server/lib/squoosh/impl";
+import {useColor} from "@/hooks/use-color";
 
 const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -26,6 +27,8 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
   const [isFriended, setIsFriended] = useState<boolean>(true);
+
+  const {color} = useColor();
 
   const isOwner: boolean = currentUser.id === user.id;
 
@@ -165,7 +168,7 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
   }, []);
 
   return (
-    <div className="relative">
+    <div className={cn("relative", color)}>
       <div
         className={cn("relative flex w-full h-72 rounded-xl", theme !== "light" && "mask")}
         onMouseOver={isOwner ? handleMouseOver : () => {

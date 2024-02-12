@@ -14,7 +14,7 @@ const PhotoViewModal = () => {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="p-10">
         <Image src={photo?.photo!} alt={"Image"} width={500} height={500} />
       </DialogContent>
     </Dialog>

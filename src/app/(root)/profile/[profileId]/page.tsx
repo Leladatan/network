@@ -100,6 +100,7 @@ const Page = async ({params}: {params: {profileId: string}}) => {
   const photos: Photo[] = await db.photo.findMany({
     where: {
       userId: user.id,
+      albumId: null,
     },
     orderBy: {
       createdAt: "desc"

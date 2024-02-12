@@ -6,12 +6,13 @@ import Link from "next/link";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {SkewLoader} from "react-spinners";
 import {useOrigin} from "@/hooks/use-origin";
+import Box from "@/components/ui/box";
 
 const FriendsList = ({user}: {user: UserWithSubscribers}) => {
   const origin: string = useOrigin();
 
   return (
-    <div className="flex flex-col gap-y-2">
+    <Box className="flex flex-col gap-y-2">
       <h3>Friends: {user.friends.length}</h3>
       <Carousel className="w-1/2">
         <CarouselContent>
@@ -34,7 +35,7 @@ const FriendsList = ({user}: {user: UserWithSubscribers}) => {
         <CarouselPrevious/>
         <CarouselNext/>
       </Carousel>
-    </div>
+    </Box>
   );
 };
 

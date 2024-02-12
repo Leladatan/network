@@ -1,6 +1,7 @@
 import {create} from "zustand";
 import {User} from "@/types/user";
 import {Comment, Photo} from "@prisma/client";
+import {AlbumWithPhotos} from "@/app/(root)/photos/page";
 
 export type ModalType =
   "accept" |
@@ -12,13 +13,17 @@ export type ModalType =
   "upload-photos" |
   "photo-view" |
   "album-add" |
+  "album-edit" |
+  "upload-album-photos" |
   "comments";
 
 interface ModalData {
   user?: User;
   comments?: Comment[];
   userId?: string;
+  albumId?: string;
   photo?: Photo;
+  album?: AlbumWithPhotos;
 }
 
 interface ModalStore {

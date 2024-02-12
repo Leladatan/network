@@ -6,6 +6,7 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {db} from "@/lib/db";
 import {User} from "@prisma/client";
 import {signIn} from "next-auth/react";
+import Box from "@/components/ui/box";
 
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -21,12 +22,12 @@ const SettingsPage = async () => {
   }
 
   return (
-    <div className="flex flex-col gap-y-4">
+    <Box className="flex flex-col gap-y-4">
       <h2 className="text-xl">Network settings and configuration</h2>
-      <Themezation />
-      <AccountSettings id={user.id} email={user.email} username={user.username} />
-      <DangerZone />
-    </div>
+      <Themezation/>
+      <AccountSettings id={user.id} email={user.email} username={user.username}/>
+      <DangerZone/>
+    </Box>
   );
 };
 

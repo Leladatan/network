@@ -1,15 +1,17 @@
 "use client";
 
-import {Image, LucideIcon, Mail, Newspaper, UserRound, Users, Settings} from "lucide-react";
+import {Image, LucideIcon, Mail, Newspaper, UserRound, Users, Settings, Music} from "lucide-react";
 import {useMemo} from "react";
 import {usePathname} from "next/navigation";
 import Link from "next/link";
 import {useUser} from "@/hooks/use-user";
+import Box from "@/components/ui/box";
+import {cn} from "@/lib/utils";
 
 const Sidebar = () => {
   const {user} = useUser();
   const pathname: string = usePathname();
-  const router: {label: string, url: string, icon: LucideIcon, active: boolean}[] = useMemo(() => [
+  const router: { label: string, url: string, icon: LucideIcon, active: boolean }[] = useMemo(() => [
     {
       label: "My profile",
       url: "/profile",
@@ -27,6 +29,12 @@ const Sidebar = () => {
       url: "/im",
       icon: Mail,
       active: pathname === "/im",
+    },
+    {
+      label: "Music",
+      url: "/music",
+      icon: Music,
+      active: pathname === "/music",
     },
     {
       label: "Photos",
@@ -49,13 +57,13 @@ const Sidebar = () => {
   ], [pathname]);
 
   return (
-    <div className="h-full p-4 border-2 rounded-md">
-      <ul className="flex flex-col gap-y-2">
+    <Box className="h-full">
+      <ul className="flex flex-col gap-y-3">
         {router.map(route => (
-          <li key={route.url} className="flex items-center gap-x-2 group">
-            <route.icon size={20} className={route.active ? "text-blue-600" : "group-hover:text-blue-500"} />
+          <li key={route.url} className="flex items-center gap-x-2 group transition">
+            <route.icon size={20} className={cn("transition", route.active ? "text-primary" : "group-hover:text-primary")}/>
             <Link
-              className={route.active ? "text-blue-600" : "group-hover:text-blue-500"}
+              className={cn("transition", route.active ? "text-primary" : "group-hover:text-primary")}
               href={route.url === "/profile" ? `/profile/${user?.id}` : route.url}
             >
               {route.label}
@@ -63,7 +71,7 @@ const Sidebar = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </Box>
   );
 };
 

@@ -2,23 +2,25 @@
 
 import {Button} from "@/components/ui/button";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
-import {BookCopy, MoreHorizontal, Trash} from "lucide-react";
+import {BookCopy, MoreHorizontal, Pencil, Trash} from "lucide-react";
 import Image from "next/image";
 import {cn} from "@/lib/utils";
 import {useSession} from "next-auth/react";
-import {useState} from "react";
-import {Album} from "@prisma/client";
+import {useEffect, useState} from "react";
 import {useModal} from "@/hooks/use-modal";
-import {PhotosDelete} from "@/actions/photos/photos-delete";
 import {toast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
+import {AlbumWithPhotos} from "@/app/(root)/photos/page";
+import defaultSrc from "@/../public/avatar.jpg";
+import {AlbumDelete} from "@/actions/album/album-delete";
 
-const AlbumsList = ({albums}: { albums: Album[] }) => {
+const AlbumsList = ({albums}: { albums: AlbumWithPhotos[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const [isSelect, setIsSelect] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selected, setSelected] = useState<string[]>([]);
-  const [photosData, setPhotosData] = useState<Album[]>(albums);
+  const [albumsData, setAlbumsData] = useState<AlbumWithPhotos[]>(albums);
+
   const {onOpen, onClose} = useModal();
 
   const router = useRouter();
@@ -39,21 +41,51 @@ const AlbumsList = ({albums}: { albums: Album[] }) => {
     setSelected([]);
   };
 
+
+  const handlerDeleteId = async (id: string) => {
+    try {
+      setIsLoading(true);
+
+      await AlbumDelete(currentUser.id, [id]);
+
+      toast({
+        title: "The album have been successfully deleted."
+      });
+
+      setTimeout((): void => {
+        router.refresh();
+      }, 700);
+
+      onClose();
+    } catch (err) {
+      console.error(err);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong."
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handlerDeleted = async () => {
     try {
       setIsLoading(true);
 
-      await PhotosDelete(currentUser.id, selected);
+      await AlbumDelete(currentUser.id, selected);
 
-      const remainingItems: Album[] = albums.filter(item => !selected.includes(item.id));
+      const remainingItems: AlbumWithPhotos[] = albums.filter(item => !selected.includes(item.id));
 
-      setPhotosData(remainingItems);
+      setAlbumsData(remainingItems);
 
       toast({
         title: "The selected albums have been successfully deleted."
       });
 
-      router.refresh();
+      setTimeout((): void => {
+        router.refresh();
+      }, 2000);
+
       onClose();
       setSelected([]);
       setIsSelect(false);
@@ -67,6 +99,10 @@ const AlbumsList = ({albums}: { albums: Album[] }) => {
       setIsLoading(false);
     }
   };
+
+  useEffect((): void => {
+    setAlbumsData(albums);
+  }, [albums]);
 
   if (!(!!albums.length)) {
     return (
@@ -97,9 +133,9 @@ const AlbumsList = ({albums}: { albums: Album[] }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {isSelect ?
-                <DropdownMenuItem disabled={isLoading} className="flex items-center gap-x-2"
+                <DropdownMenuItem disabled={isLoading || !(!!selected.length)} className="flex items-center gap-x-2 text-rose-500"
                                   onClick={() => onOpen("accept", {}, () => handlerDeleted())}>
-                  <Trash/>
+                  <Trash size={20}/>
                   <p>
                     Delete
                   </p>
@@ -131,7 +167,7 @@ const AlbumsList = ({albums}: { albums: Album[] }) => {
         )}
         {!isSelect ? (
             <Button disabled={isLoading} variant={"ghost"}
-                    onClick={() => onOpen("upload-photos")}>
+                    onClick={() => onOpen("album-add", {userId: currentUser.id})}>
               Add album
             </Button>
           )
@@ -149,9 +185,9 @@ const AlbumsList = ({albums}: { albums: Album[] }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {isSelect ?
-              <DropdownMenuItem disabled={isLoading} className="flex items-center gap-x-2"
+              <DropdownMenuItem disabled={isLoading || !(!!selected.length)} className="flex items-center gap-x-2 text-rose-500"
                                 onClick={() => onOpen("accept", {}, () => handlerDeleted())}>
-                <Trash/>
+                <Trash size={20}/>
                 <p>
                   Delete
                 </p>
@@ -168,22 +204,59 @@ const AlbumsList = ({albums}: { albums: Album[] }) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="columns-7 gap-5">
-        {albums.map(album => (
-          <div key={album.id} className="relative cursor-pointer"
+      <div className="columns-5">
+        {albumsData.map(album => (
+          <div key={album.id} className="relative cursor-pointer w-full"
                onClick={isSelect ? () => handlerSelected(album.id) : () => router.push(`/album/${album.id}`)}>
             <Image
-              src={"./avatar.jpg"}
+              src={album.photos.length ? album.photos[0].photo : defaultSrc}
               alt={"Image"}
               width={300}
               height={100}
               quality={100}
-              className="w-full"
+              className="w-full rounded mb-5"
             />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={"ghost"} className="absolute top-2 right-2 z-20">
+                  <MoreHorizontal size={20}/>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="flex flex-col gap-y-2">
+                <DropdownMenuItem
+                  disabled={isLoading}
+                  className="flex items-center gap-x-2"
+                  onClick={(e): void => {
+                    e.stopPropagation();
+                    onOpen("album-edit", {album, userId: currentUser.id});
+                  }}
+                >
+                  <Pencil size={20}/>
+                  <p>
+                    Edit
+                  </p>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={isLoading}
+                  className="flex items-center gap-x-2 text-rose-500"
+                  onClick={(e): void => {
+                    e.stopPropagation();
+                    onOpen("accept", {}, () => handlerDeleteId(album.id));
+                  }}
+                >
+                  <Trash size={20}/>
+                  <p>
+                    Delete
+                  </p>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <p className="absolute left-2 top-2 w-full truncate pr-4">({album.photos.length})</p>
+            <p className="absolute left-2 bottom-2 w-full truncate pr-4">Name: {album.name}</p>
             {isSelect && (
               <div
-                className={cn("absolute top-1 right-1 w-6 h-6 rounded-full border-2 border-emerald-500",
-                  selected.includes(album.id) && "bg-emerald-500")}
+                className={cn("absolute top-1 right-1 w-6 h-6 rounded-full border-2 border-primary",
+                  selected.includes(album.id) && "bg-primary")}
               />
             )}
           </div>

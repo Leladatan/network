@@ -9,7 +9,7 @@ import BannerModal from "@/components/modals/banner-modal";
 import AvatarModal from "@/components/modals/avatar-modal";
 import PhotosModal from "@/components/modals/photos-modal";
 import PhotoViewModal from "@/components/modals/photo-view-modal";
-import AlbumAddModal from "@/components/modals/album-add-modal";
+import AlbumModal from "@/components/modals/album-modal";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -40,7 +40,7 @@ const ModalProvider = () => {
       <AvatarModal />
       <PhotosModal />
       <PhotoViewModal />
-      <AlbumAddModal />
+      <AlbumModal />
     </>
   );
 };

@@ -9,8 +9,9 @@ import {LucideIcon, MoreHorizontal, Pencil, Trash2} from "lucide-react";
 import {Dispatch, SetStateAction, useMemo} from "react";
 import {PostWithUser} from "@/app/(root)/profile/[profileId]/_components";
 import {useOrigin} from "@/hooks/use-origin";
-import {usePathname} from "next/navigation";
+import {useParams, usePathname} from "next/navigation";
 import {useSession} from "next-auth/react";
+import {cn} from "@/lib/utils";
 
 type props = {
   post: PostWithUser;
@@ -69,19 +70,17 @@ const PostHeader = ({post, handlerActions, setIsEdit, isLoading}: props) => {
             <MoreHorizontal className="self-start cursor-pointer"/>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {ContextMenuItems.map(item => {
-              return (
+            {ContextMenuItems.map(item =>
                 <DropdownMenuItem
                   disabled={isLoading}
                   onClick={() => item.label === "Edit" ? setIsEdit(true) : item.handler(post.userId, post.id, item.type)}
                   key={item.label}
-                  className="flex items-center gap-x-3 cursor-pointer"
+                  className={cn("flex items-center gap-x-3 cursor-pointer", item.label === "Delete" && "text-rose-500")}
                 >
                   <item.icon size={15}/>
                   <p>{item.label}</p>
                 </DropdownMenuItem>
-              );
-            })}
+              )}
           </DropdownMenuContent>
         </DropdownMenu>
       )}

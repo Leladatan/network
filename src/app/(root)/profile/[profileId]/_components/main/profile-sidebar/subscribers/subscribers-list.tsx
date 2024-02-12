@@ -6,13 +6,14 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {SkewLoader} from "react-spinners";
 import {useOrigin} from "@/hooks/use-origin";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
+import Box from "@/components/ui/box";
 
 const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
   const origin: string = useOrigin();
 
   return (
     <>
-      <div className="flex flex-col gap-y-2">
+      <Box className="flex flex-col gap-y-2">
         <h3>Subscriptions: {user.subscriptions.length}</h3>
         <Carousel className="w-1/2">
           <CarouselContent>
@@ -35,8 +36,8 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
           <CarouselPrevious/>
           <CarouselNext/>
         </Carousel>
-      </div>
-      <div className="flex flex-col gap-y-2">
+      </Box>
+      <Box className="flex flex-col gap-y-2">
         <h3>Subscribers: {user.subscribers.length}</h3>
         <Carousel className="w-1/2">
           <CarouselContent>
@@ -59,7 +60,7 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
           <CarouselPrevious/>
           <CarouselNext/>
         </Carousel>
-      </div>
+      </Box>
     </>
   );
 };

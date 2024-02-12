@@ -23,6 +23,7 @@ import TextareaForPostComment
   from "@/app/(root)/profile/[profileId]/_components/main/posts/other-item-post/textarea-for-post-comment";
 import PostHeader from "@/app/(root)/profile/[profileId]/_components/main/posts/other-item-post/post-header";
 import PostContent from "@/app/(root)/profile/[profileId]/_components/main/posts/other-item-post/post-content";
+import Box from "@/components/ui/box";
 
 const ProfilePost = ({post}: {
   post: PostWithUser
@@ -148,7 +149,7 @@ const ProfilePost = ({post}: {
 
   return (
     <>
-      <div className="flex flex-col gap-y-4 rounded-xl p-3 border-2">
+      <Box className="flex flex-col gap-y-4 rounded-xl p-3">
         <PostHeader post={post} handlerActions={handlerActions} isLoading={isLoading} setIsEdit={setIsEdit}/>
         <PostContent
           post={post}
@@ -159,7 +160,7 @@ const ProfilePost = ({post}: {
         />
         <div className="flex items-center gap-x-4">
           <Button disabled={isLoading} variant={"ghost"} className="flex items-center gap-x-2" onClick={handleLike}>
-            <Heart size={20} className={isLike ? "text-rose-500" : ""}/> {post.likes}
+            <Heart size={20} className={isLike ? "fill-rose-500 text-rose-500" : ""}/> {post.likes}
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -186,7 +187,7 @@ const ProfilePost = ({post}: {
         {isViewComment &&
           <PostComments post={post} setIsViewComment={setIsViewComment} />
         }
-      </div>
+      </Box>
       {isComment &&
         <TextareaForPostComment
           setIsComment={setIsComment}

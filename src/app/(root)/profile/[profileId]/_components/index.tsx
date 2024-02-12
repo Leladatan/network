@@ -38,8 +38,6 @@ const ProfileIdPage = async (user: UserWithSubscribers) => {
     }
   });
 
-  //todo: сделать друзей которые находятся в онлайн
-
   const subscribers: SubscribersOnlineWithUser[] = await db.subscriber.findMany({
     where: {
       userId: user.id,

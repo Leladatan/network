@@ -7,7 +7,7 @@ interface IColor {
   setColor: (color: Color) => void;
 }
 
-const storageColor: Color = typeof window !== "undefined" ? localStorage.getItem("twitch-color") as Color : "default";
+const storageColor: Color = typeof window !== "undefined" ? localStorage.getItem("social-color") as Color : "default";
 
 export const useColor = create<IColor>((set) => ({
   color: storageColor ? storageColor : "default",
