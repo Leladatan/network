@@ -11,6 +11,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {SkewLoader} from "react-spinners";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {MoreHorizontal, Trash, UserRoundPlus} from "lucide-react";
+import Box from "@/components/ui/box";
 
 const TabSubscriberList = ({subscribers}: { subscribers: SubscriberAndUser[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -36,10 +37,10 @@ const TabSubscriberList = ({subscribers}: { subscribers: SubscriberAndUser[] }) 
   };
 
   return (
-    <div className="mt-4 w-1/4">
+    <div className="grid grid-cols-5 gap-5">
       {!!subscribers.length ?
         subscribers.map(subscriber => (
-          <div key={subscriber.id}>
+          <Box key={subscriber.id}>
             <div className="relative flex items-center gap-x-4">
               <Link className="relative" href={`${origin}/profile/${subscriber.user.id}`}>
                 <Avatar className="w-20 h-20">
@@ -66,7 +67,7 @@ const TabSubscriberList = ({subscribers}: { subscribers: SubscriberAndUser[] }) 
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </div>
+          </Box>
         ))
         :
         <div>

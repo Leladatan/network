@@ -24,7 +24,7 @@ const ProfilePhotosPage = ({photos, albums}: { photos: Photo[], albums: AlbumWit
           <div className="columns-7">
             {!!photos.length ?
               photos.map(photo => (
-                <Image key={photo.id} src={photo.photo} alt={"Image"} onClick={() => onOpen("photo-view", {photo})}
+                <Image key={photo.id} src={photo.photo} alt={"Image"} onClick={() => onOpen("photo-view", {photo: photo.photo})}
                        width={100} height={100} className="w-full mb-5"/>
               ))
               :

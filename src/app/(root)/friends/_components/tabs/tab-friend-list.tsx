@@ -12,6 +12,7 @@ import {useState} from "react";
 import {useRouter} from "next/navigation";
 import {FriendDelete} from "@/actions/friend/friend-delete";
 import {useSession} from "next-auth/react";
+import Box from "@/components/ui/box";
 
 const TabFriendList = ({friends}: { friends: FriendAndUser[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -38,10 +39,10 @@ const TabFriendList = ({friends}: { friends: FriendAndUser[] }) => {
   };
 
   return (
-    <div className="mt-4 w-1/4">
+    <div className="grid grid-cols-5 gap-5">
       {!!friends.length ?
         friends.map(friend => (
-          <div key={friend.id}>
+          <Box key={friend.id}>
             <div className="relative flex gap-x-4">
               <Link className="relative" href={`${origin}/profile/${friend.friend.id}`}>
                 <Avatar className="w-20 h-20">
@@ -68,7 +69,7 @@ const TabFriendList = ({friends}: { friends: FriendAndUser[] }) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </div>
+          </Box>
         ))
         :
         <div>

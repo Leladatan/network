@@ -178,7 +178,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
       <div className="columns-7">
         {photosData.map((photo,index) => (
           <div key={index} className="relative cursor-pointer"
-               onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("photo-view", {photo})}>
+               onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("photo-view", {photo: photo.photo})}>
             <Image
               src={photo.photo}
               alt={"Image"}

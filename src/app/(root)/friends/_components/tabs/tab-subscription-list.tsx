@@ -11,6 +11,7 @@ import {useState} from "react";
 import {useRouter} from "next/navigation";
 import {toast} from "@/components/ui/use-toast";
 import {ProfileSubscriberDelete} from "@/actions/profile/subscribe/profile-subscribe-delete";
+import Box from "@/components/ui/box";
 
 const TabSubscriptionList = ({subscriptions}: { subscriptions: SubscriberAndSubscriber[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -37,10 +38,10 @@ const TabSubscriptionList = ({subscriptions}: { subscriptions: SubscriberAndSubs
   };
 
   return (
-    <div className="mt-4 w-1/4">
+    <div className="grid grid-cols-5 gap-5">
       {!!subscriptions.length ?
         subscriptions.map(subscription => (
-          <div key={subscription.id}>
+          <Box key={subscription.id}>
             <div className="relative flex gap-x-4">
               <Link className="relative" href={`${origin}/profile/${subscription.subscriber.id}`}>
                 <Avatar className="w-20 h-20">
@@ -67,7 +68,7 @@ const TabSubscriptionList = ({subscriptions}: { subscriptions: SubscriberAndSubs
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </div>
+          </Box>
         ))
         :
         <div>

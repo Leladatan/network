@@ -5,7 +5,7 @@ import {Post} from "@prisma/client";
 export const POST = async (req: Request, {params}: {params: {profileId: string}}) => {
   try {
     const id: string = params.profileId;
-    const {title, userId, authorId} = await req.json();
+    const {title, userId, authorId, photo} = await req.json();
 
     if (!id) {
       return new NextResponse("Unauthenticated", {status: 401});
@@ -24,6 +24,7 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
         title,
         authorId,
         userId,
+        photo
       }
     });
 

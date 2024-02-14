@@ -5,6 +5,8 @@ import {maxLengthForPostTitle} from "@/utils/constants/maxLength";
 import {Button} from "@/components/ui/button";
 import {Dispatch, SetStateAction, useState} from "react";
 import {PostWithUser} from "@/app/(root)/profile/[profileId]/_components";
+import Image from "next/image";
+import {useModal} from "@/hooks/use-modal";
 
 type props = {
   isEdit: boolean;
@@ -16,6 +18,7 @@ type props = {
 
 const PostContent = ({handlerActions, isEdit, setIsEdit, post, isLoading}: props) => {
   const [value, setValue] = useState<string>(post.title);
+  const {onOpen} = useModal();
 
   return (
     <div className="flex flex-col gap-y-4 px-4 pb-4">
@@ -48,7 +51,10 @@ const PostContent = ({handlerActions, isEdit, setIsEdit, post, isLoading}: props
           </div>
         </>
         :
-        <p className="break-all">{post.title}</p>
+        <>
+          <p className="break-all">{post.title}</p>
+          {post.photo && <Image src={post.photo} alt={"Image in post"} width={200} height={200} onClick={() => onOpen("photo-view", {photo: post.photo!})} className="rounded-xl" />}
+        </>
       }
       {post.isEdited && <span className="self-end italic text-neutral-600">(edit)</span>}
     </div>

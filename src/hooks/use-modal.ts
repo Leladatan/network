@@ -15,6 +15,7 @@ export type ModalType =
   "album-add" |
   "album-edit" |
   "upload-album-photos" |
+  "upload-post-photos" |
   "comments";
 
 interface ModalData {
@@ -22,7 +23,7 @@ interface ModalData {
   comments?: Comment[];
   userId?: string;
   albumId?: string;
-  photo?: Photo;
+  photo?: string;
   album?: AlbumWithPhotos;
 }
 
@@ -30,9 +31,9 @@ interface ModalStore {
   type: ModalType | null;
   data: ModalData;
   isOpen: boolean;
-  onOpen: (type: ModalType, data?: ModalData, func?: () => void) => void;
+  onOpen: (type: ModalType, data?: ModalData, func?: (values?: string) => void) => void;
   onClose: () => void;
-  func?: () => void
+  func?: (values?: string) => void;
 }
 
 export const useModal = create<ModalStore>((set) => ({
@@ -40,5 +41,5 @@ export const useModal = create<ModalStore>((set) => ({
   data: {},
   isOpen: false,
   onClose: () => set({type: null, isOpen: false}),
-  onOpen: (type: ModalType, data: ModalData = {}, func: (() => void) | undefined) => set({type, isOpen: true, data, func}),
+  onOpen: (type: ModalType, data: ModalData = {}, func: ((values?: string) => void) | undefined) => set({type, isOpen: true, data, func}),
 }));

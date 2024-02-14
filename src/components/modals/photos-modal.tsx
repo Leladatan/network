@@ -28,7 +28,7 @@ const formSchema = z.object({
 
 const PhotosModal: FC = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
-  const {isOpen, onClose, type, data} = useModal();
+  const {isOpen, onClose, type, data, func} = useModal();
   const {userId, albumId} = data;
   const router: AppRouterInstance = useRouter();
 
@@ -44,10 +44,14 @@ const PhotosModal: FC = () => {
   });
 
   const isSubmitting: boolean = form.formState.isSubmitting;
-  const isOpenModal: boolean = isOpen && type === "upload-photos" ||  isOpen && type === "upload-album-photos";
+  const isOpenModal: boolean = isOpen && type === "upload-photos" || isOpen && type === "upload-album-photos" || isOpen && type === "upload-post-photos";
 
   const onSubmit = async (values: z.infer<typeof formSchema>): Promise<void> => {
     try {
+      if (func && type === "upload-post-photos") {
+        func(values.photos);
+      }
+
       if (userId) {
         if (type === "upload-album-photos" && albumId) {
           await AlbumPhotosAdd(userId, albumId, values);

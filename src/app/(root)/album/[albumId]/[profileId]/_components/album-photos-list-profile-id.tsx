@@ -19,7 +19,7 @@ const AlbumPhotosListProfileId = ({photos}: {photos: Photo[]}) => {
     <Box className="columns-7">
         {photos.map((photo) => (
           <div key={photo.id} className="relative cursor-pointer"
-               onClick={() => onOpen("photo-view", {photo})}>
+               onClick={() => onOpen("photo-view", {photo: photo.photo})}>
             <Image
               src={photo.photo}
               alt={"Image"}

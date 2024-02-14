@@ -24,7 +24,7 @@ const PhotosList = ({photos}: { photos: Photo[] }) => {
             <CarouselItem key={item.id} className="w-1/4 pl-1 md:basis-1/2 lg:basis-1/3">
               <div className="flex flex-col gap-y-1 items-center justify-center">
                 <Image className="cursor-pointer aspect-square object-contain" src={item.photo} alt={"Img"} width={200} height={200}
-                       onClick={() => onOpen("photo-view", {photo: item})}/>
+                       onClick={() => onOpen("photo-view", {photo: item.photo})}/>
               </div>
             </CarouselItem>
           ))}

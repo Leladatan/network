@@ -88,7 +88,10 @@ const AlbumPhotosList = ({photos}: {photos: Photo[]}) => {
           )}
           {!isSelect ? (
               <Button disabled={isLoading} variant={"ghost"}
-                      onClick={() => onOpen("upload-album-photos", {userId: currentUser.id, albumId: params.albumId as string})}>
+                      onClick={() => onOpen("upload-album-photos", {
+                        userId: currentUser.id,
+                        albumId: params.albumId as string
+                      })}>
                 Download image
               </Button>
             )
@@ -140,7 +143,10 @@ const AlbumPhotosList = ({photos}: {photos: Photo[]}) => {
         )}
         {!isSelect ? (
             <Button disabled={isLoading} variant={"ghost"}
-                    onClick={() => onOpen("upload-album-photos", {userId: currentUser.id, albumId: params.albumId as string})}>
+                    onClick={() => onOpen("upload-album-photos", {
+                      userId: currentUser.id,
+                      albumId: params.albumId as string
+                    })}>
               Download image
             </Button>
           )
@@ -180,7 +186,7 @@ const AlbumPhotosList = ({photos}: {photos: Photo[]}) => {
       <div className="columns-7">
         {photosData.map((photo) => (
           <div key={photo.id} className="relative cursor-pointer"
-               onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("photo-view", {photo})}>
+               onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("photo-view", {photo: photo.photo})}>
             <Image
               src={photo.photo}
               alt={"Image"}

@@ -46,6 +46,8 @@ model Post {
   id    String @id @default(uuid())
   title String
 
+  photo String?
+
   userId String
   user   User   @relation("Posts", fields: [userId], references: [id])
 
