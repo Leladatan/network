@@ -9,7 +9,7 @@ import {LucideIcon, MoreHorizontal, Pencil, Trash2} from "lucide-react";
 import {Dispatch, SetStateAction, useMemo} from "react";
 import {PostWithUser} from "@/app/(root)/profile/[profileId]/_components";
 import {useOrigin} from "@/hooks/use-origin";
-import {useParams, usePathname} from "next/navigation";
+import {usePathname} from "next/navigation";
 import {useSession} from "next-auth/react";
 import {cn} from "@/lib/utils";
 
@@ -48,6 +48,7 @@ const PostHeader = ({post, handlerActions, setIsEdit, isLoading}: props) => {
         handlerActions(userId, postId, type)
     },
   ], [post]);
+
 
   return (
     <div className="flex items-center justify-between gap-x-4">

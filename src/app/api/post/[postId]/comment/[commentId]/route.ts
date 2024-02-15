@@ -36,7 +36,8 @@ export const PATCH = async (req: Request, {params}: {params: {postId: string, co
         postId
       },
       data: {
-        title
+        title,
+        isEdited: true
       }
     });
 

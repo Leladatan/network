@@ -11,8 +11,8 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
       return new NextResponse("Unauthenticated", {status: 401});
     }
 
-    if (!title) {
-      return new NextResponse("Title is required", {status: 400});
+    if (!title && !photo) {
+      return new NextResponse("Title or photo is required", {status: 400});
     }
 
     if (!authorId) {

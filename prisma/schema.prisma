@@ -95,6 +95,8 @@ model Comment {
   postId String
   post   Post   @relation("CommentsPost", onDelete: Cascade, fields: [postId], references: [id])
 
+  isEdited Boolean @default(false)
+
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 

@@ -65,7 +65,7 @@ const TextareaForPostComment = ({isLoading, setIsLoading, setIsComment, postId, 
           Cancel
         </Button>
         <Button
-          disabled={isLoading}
+          disabled={isLoading || !comment}
           onClick={() => commentAdd(currentUser, postId)}
           size={"sm"}
         >

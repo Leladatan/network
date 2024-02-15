@@ -11,7 +11,7 @@ import {maxLengthForPostTitle} from "@/utils/constants/maxLength";
 import {Button} from "@/components/ui/button";
 import {useMemo, useState} from "react";
 import {CommentWithUser} from "@/app/(root)/profile/[profileId]/_components";
-import {useParams, usePathname, useRouter} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import {PostCommentDelete} from "@/actions/profile/post/comment/post-comment-delete";
 import {toast} from "@/components/ui/use-toast";
 import {PostCommentEdit} from "@/actions/profile/post/comment/post-comment-edit";
@@ -153,7 +153,7 @@ const PostCommentItem = ({comment}: {comment: CommentWithUser}) => {
           </DropdownMenu>
         }
       </div>
-      <div className="my-2">
+      <div className="flex flex-col my-2">
         {isEdit ?
           <div className="flex flex-col gap-y-3 self-end">
             <Textarea
@@ -183,7 +183,10 @@ const PostCommentItem = ({comment}: {comment: CommentWithUser}) => {
             </div>
           </div>
           :
-          <p className="break-all">{comment.title}</p>
+          <>
+            <p className="break-all">{comment.title}</p>
+            {comment.isEdited && <span className="self-end italic text-primary-foreground/50">(edit)</span>}
+          </>
         }
       </div>
     </>

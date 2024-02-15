@@ -15,12 +15,11 @@ type props = {
 };
 
 const FriendPage = ({subscribers, subscriptions, friends}: props) => {
-  //todo: сделать поиск по имени пользователя или айди
   return (
-      <Tabs defaultValue={"friend"} className="flex flex-col gap-y-5">
+      <Tabs defaultValue={"friends"} className="flex flex-col gap-y-5">
         <Box>
           <TabsList>
-            <TabsTrigger value={"friend"}>Friend ({friends.length})</TabsTrigger>
+            <TabsTrigger value={"friends"}>Friends ({friends.length})</TabsTrigger>
             <TabsTrigger value={"subscribers"}>Subscribers ({subscribers.length})</TabsTrigger>
             <TabsTrigger value={"subscriptions"}>Subscriptions ({subscriptions.length})</TabsTrigger>
           </TabsList>
@@ -28,7 +27,7 @@ const FriendPage = ({subscribers, subscriptions, friends}: props) => {
         <Box>
           <InputSearch name={"search"} placeholder={"Search your friend..."} />
         </Box>
-          <TabsContent value={"friend"}>
+          <TabsContent value={"friends"}>
             <TabFriendList friends={friends} />
           </TabsContent>
           <TabsContent value={"subscribers"}>

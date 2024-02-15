@@ -7,9 +7,6 @@ export const DELETE = async (req: Request, {params}: {params: {profileId: string
     const userId: string = params.profileId;
     const postId: string = params.postId;
 
-    console.log(userId);
-    console.log(postId);
-
     if (!userId) {
       return new NextResponse("Unauthenticated", {status: 401});
     }

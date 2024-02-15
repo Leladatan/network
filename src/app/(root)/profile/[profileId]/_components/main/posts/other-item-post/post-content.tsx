@@ -53,10 +53,11 @@ const PostContent = ({handlerActions, isEdit, setIsEdit, post, isLoading}: props
         :
         <>
           <p className="break-all">{post.title}</p>
-          {post.photo && <Image src={post.photo} alt={"Image in post"} width={200} height={200} onClick={() => onOpen("photo-view", {photo: post.photo!})} className="rounded-xl" />}
+          {post.photo && <Image src={post.photo} alt={"Image in post"} width={200} height={200}
+                                onClick={() => onOpen("photo-view", {photo: post.photo!})} className="rounded-xl cursor-pointer" />}
         </>
       }
-      {post.isEdited && <span className="self-end italic text-neutral-600">(edit)</span>}
+      {post.isEdited && <span className="self-end italic text-primary-foreground/50">(edit)</span>}
     </div>
   );
 };

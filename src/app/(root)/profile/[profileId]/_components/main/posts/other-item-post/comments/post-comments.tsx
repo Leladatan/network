@@ -12,7 +12,6 @@ const PostComments = ({post, setIsViewComment}: {
   post: PostWithUser,
   setIsViewComment: Dispatch<SetStateAction<boolean>>
 }) => {
-
   return (
     <>
       <Separator className="bg-accent-foreground mt-4 mb-1"/>
