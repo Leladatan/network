@@ -8,6 +8,7 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import ThemesProvider from "@/providers/theme/theme-provider";
 import ModalProvider from "@/providers/modal/modal-provider";
+import SupabaseProvider from "@/providers/supabase/supabase-provider";
 
 const inter: NextFont = Inter({ subsets: ["latin"] });
 
@@ -27,11 +28,13 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider session={session}>
+          <SupabaseProvider>
           <ThemesProvider>
             <ModalProvider />
             <Toaster />
             {children}
           </ThemesProvider>
+          </SupabaseProvider>
         </AuthProvider>
       </body>
     </html>

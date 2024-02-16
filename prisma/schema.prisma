@@ -203,3 +203,15 @@ model Album {
 
   @@index([userId])
 }
+
+model Music {
+  id String @id @default(uuid())
+
+  title      String
+  author     String
+  image_path String
+  song_path  String @unique
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
