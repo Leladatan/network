@@ -1,41 +1,36 @@
 "use client";
 
-import {useState} from "react";
-import useSound from "use-sound";
 import Image from "next/image";
 import {Music} from "@prisma/client";
+import {PauseCircle, PlayCircle} from "lucide-react";
+import usePlayer from "@/hooks/use-player";
+import {cn} from "@/lib/utils";
+import Loader from "@/components/ui/loader";
+import {ScaleLoader} from "react-spinners";
 
-const MusicItem = ({music}: { music: Music }) => {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+const MusicItem = ({music, onPlay}: { music: Music, onPlay: () => void }) => {
+  const player = usePlayer();
 
   const handlePlay = (): void => {
-    if (!isPlaying) {
-      play();
-    } else {
-      pause();
+    onPlay();
+    if (player.activeMusic?.id === music.id && player.isPlay) {
+      player.setIsPlay(false);
+      return;
     }
+
+    player.setIsPlay(true);
   };
-  const [play, {pause, duration, sound}] = useSound(
-    music.song_path,
-    {
-      volume: 1,
-      onplay: (): void => {
-        setIsPlaying(true);
-      },
-      // onend: (): void => {
-      //   setIsPlaying(false);
-      //   onPlayNext();
-      // },
-      // onpause: (): void => setIsPlaying(false),
-      format: ["mp3"]
-    }
-  );
 
   return (
-    <div onClick={handlePlay}>
-      <Image src={music.image_path} alt={"Image song"} width={100} height={100} className={"rounded-xl"}/>
-      <p>{music.title}</p>
-      <p>{music.author}</p>
+    <div onClick={handlePlay} className={cn("w-full flex flex-col gap-y-5 items-center justify-center opacity-80 hover:opacity-100 transition cursor-pointer", player.activeMusic?.id === music.id && "opacity-100")}>
+      <div className="relative w-full flex items-center justify-center">
+        <Image src={music.image_path} alt={"Image song"} width={225} height={225} className={"rounded-xl"}/>
+        {(player.activeMusic?.id === music.id) && <ScaleLoader className="absolute opacity-70" color={"purple"} />}
+      </div>
+      <div className="flex flex-col items-center justify-center gap-y-2">
+        <h4 className="truncate">{music.title}</h4>
+        <p className="truncate">{music.author}</p>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 export type Color = "default" | "rose" | "violet" | "orange" | "green" | "blue" | "yellow";
 
-export type keys = "social-color";
+export type keys = "social-color" | "volume";
 
 export type localStorageType = {
   key: keys,
-  value: Color
+  value: Color | string;
 };
 
 export type useLocalStorageType = {

@@ -92,7 +92,7 @@ const AcceptPassword = () => {
         </DialogHeader>
         <div className="flex flex-col gap-y-2">
           <label>Password</label>
-          <Input disabled={isLoading} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={"Enter your password to confirm"} />
+          <Input disabled={isLoading} value={password} type={"password"} onChange={(e) => setPassword(e.target.value)} placeholder={"Enter your password to confirm"} />
         </div>
         <DialogFooter>
           <Button disabled={isLoading} onClick={onClose}>Cancel</Button>

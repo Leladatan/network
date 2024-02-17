@@ -9,9 +9,12 @@ import {setOffline} from "@/actions/offline/offline";
 import {Notification} from "@prisma/client";
 import NotificationHeader from "@/components/notification/notification-header";
 import Box from "@/components/ui/box";
+import usePlayer from "@/hooks/use-player";
+import HeaderMusic from "@/components/header-music";
 
 const Header = ({notifications, count}: { notifications: Notification[], count: number }) => {
   const {user} = useUser();
+  const player = usePlayer();
 
   const handleSignOut = async (): Promise<void> => {
     await setOffline(user.id);
@@ -22,10 +25,8 @@ const Header = ({notifications, count}: { notifications: Notification[], count: 
     <header>
       <Box className="flex items-center justify-between gap-x-2">
         <Logo/>
-        <nav>
-          Music
-        </nav>
-        <NotificationHeader notifications={notifications} count={count} />
+        {player.activeMusic && <HeaderMusic player={player} music={player.activeMusic}/>}
+        <NotificationHeader notifications={notifications} count={count}/>
         <Button onClick={handleSignOut}>
           Sign out
         </Button>

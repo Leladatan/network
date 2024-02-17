@@ -1,15 +1,15 @@
 import {Music} from "@prisma/client";
 import usePlayer from "@/hooks/use-player";
 
-const usePlay = (songs: Music[]) => {
+const usePlay = (musics: Music[]) => {
   const player = usePlayer();
 
-  const onPlay = (id: string): void => {
-    player.setId(id);
-    player.setIds(songs.map(song => song.id));
+  const onPlay = (music: Music): void => {
+    player.setId(music);
+    player.setIds(musics);
   };
 
   return {onPlay};
-}
+};
 
 export default usePlay;

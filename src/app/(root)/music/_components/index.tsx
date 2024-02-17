@@ -10,8 +10,6 @@ import MusicItem from "@/app/(root)/music/_components/music-item";
 const MusicPage = ({musics}: { musics: Music[] }) => {
   const {onPlay} = usePlay(musics);
 
-  // todo: Доделать воспроизведение музыки
-
   return (
     <div>
       <Box>
@@ -24,8 +22,8 @@ const MusicPage = ({musics}: { musics: Music[] }) => {
           <TabsContent value={"main"}>
             <div className="grid grid-cols-4 gap-10">
               {musics.map(music => (
-                <MusicItem key={music.id} music={music}/>
-                ))}
+                <MusicItem key={music.id} music={music} onPlay={() => onPlay(music)}/>
+              ))}
             </div>
           </TabsContent>
           <TabsContent value={"my"}>

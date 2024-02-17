@@ -9,6 +9,8 @@ declare module "use-sound" {
     sprite?: { [key: string]: [number, number] };
     onplay?: () => void;
     format?: ["mp3"];
+    onend?: () => void;
+    onpause?: () => void;
     // You can add more properties as needed based on your use case
   }
 
@@ -20,6 +22,8 @@ declare module "use-sound" {
     sprite: { [key: string]: [number, number] };
     onplay?: () => void;
     format?: ["mp3"];
+    onend?: () => void;
+    onpause?: () => void;
     // You can add more properties as needed based on your use case
   }
 
