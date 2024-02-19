@@ -67,12 +67,12 @@ const ProfilePost = ({post}: {
     setIsViewComment(prev => !prev);
   };
 
-  const handlerActions = async (userId: string, postId: string, type: "edit" | "delete", title?: string) => {
+  const handlerActions = async (userId: string, postId: string, type: "edit" | "delete", title?: string, photo?: string | null) => {
     try {
       if (type === "edit" && title) {
         setIsLoading(true);
 
-        await ProfilePostEdit(userId, postId, title);
+        await ProfilePostEdit(userId, postId, title, photo);
 
         setIsEdit(false);
 

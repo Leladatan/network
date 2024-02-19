@@ -15,8 +15,6 @@ export const DELETE = async (req: Request, {params}: {params: {profileId: string
       return new NextResponse("Not found post", {status: 404});
     }
 
-
-
     const post = await db.post.deleteMany({
       where: {
         id: postId,
@@ -36,7 +34,7 @@ export const PATCH = async (req: Request, {params}: {params: {profileId: string,
     const userId: string = params.profileId;
     const postId: string = params.postId;
 
-    const {title} = await req.json();
+    const {title, photo} = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthenticated", {status: 401});
@@ -44,6 +42,16 @@ export const PATCH = async (req: Request, {params}: {params: {profileId: string,
 
     if (!postId) {
       return new NextResponse("Not found post", {status: 404});
+    }
+
+    if (photo) {
+      await db.photo.create({
+        data: {
+          photo,
+          userId,
+          type: "post",
+        },
+      });
     }
 
     const post: Post = await db.post.update({
@@ -54,7 +62,8 @@ export const PATCH = async (req: Request, {params}: {params: {profileId: string,
       data: {
         title,
         isEdited: true,
-        updateAt: new Date()
+        updateAt: new Date(),
+        photo: photo ? photo : null,
       },
     });
 

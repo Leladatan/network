@@ -19,6 +19,14 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
       return new NextResponse("Author ID is required", {status: 400});
     }
 
+    await db.photo.create({
+      data: {
+        photo,
+        userId,
+        type: "post",
+      }
+    });
+
     const post: Post = await db.post.create({
       data: {
         title,
