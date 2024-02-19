@@ -14,7 +14,7 @@ import HeaderMusic from "@/components/header-music";
 
 const Header = ({notifications, count}: { notifications: Notification[], count: number }) => {
   const {user} = useUser();
-  const player = usePlayer();
+  const {activeMusic} = usePlayer();
 
   const handleSignOut = async (): Promise<void> => {
     await setOffline(user.id);
@@ -25,7 +25,7 @@ const Header = ({notifications, count}: { notifications: Notification[], count: 
     <header>
       <Box className="flex items-center justify-between gap-x-2">
         <Logo/>
-        {player.activeMusic && <HeaderMusic player={player} music={player.activeMusic}/>}
+        {activeMusic && <HeaderMusic music={activeMusic}/>}
         <NotificationHeader notifications={notifications} count={count}/>
         <Button onClick={handleSignOut}>
           Sign out

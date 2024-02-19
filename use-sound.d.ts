@@ -1,5 +1,6 @@
 declare module "use-sound" {
-  import { Howl, Howler } from "howler";
+  import { Howl } from "howler";
+  import {Music} from "@prisma/client";
 
   interface HookOptions {
     volume?: number;
@@ -37,8 +38,8 @@ declare module "use-sound" {
   }
 
   interface PlayExposedData extends ExposedData {
-    stop: (id?: string) => void;
-    pause: (id?: string) => void;
+    stop: (music?: Music) => void;
+    pause: (music?: Music) => void;
     duration: number | null;
     sound: Howl | null;
   }

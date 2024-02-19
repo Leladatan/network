@@ -3,30 +3,43 @@
 import {useEffect, useState} from "react";
 import {Music} from "@prisma/client";
 import useSound from "use-sound";
-import {PlayerStore} from "@/hooks/use-player";
+import usePlayer from "@/hooks/use-player";
 import {Button} from "@/components/ui/button";
-import {PauseCircle, PlayCircle, SkipBack, SkipForward} from "lucide-react";
+import {PauseCircle, PlayCircle, SkipBack, SkipForward, Volume1, Volume2, VolumeX} from "lucide-react";
 import {Drawer, DrawerContent, DrawerHeader, DrawerTrigger} from "@/components/ui/drawer";
 import DrawerMusic from "@/components/drawer-music";
 import {useColor} from "@/hooks/use-color";
 import {cn} from "@/lib/utils";
 import {Slider} from "@/components/ui/slider";
 import {useLocalStorage} from "@/hooks/use-local-storage";
+import MusicTrackSlider from "@/components/music-track-slider";
 
-const HeaderMusic = ({player, music}: { player: PlayerStore, music: Music }) => {
+const HeaderMusic = ({music}: { music: Music }) => {
   const {color} = useColor();
+  const player = usePlayer();
   const {getLocalStorage, setLocalStorage} = useLocalStorage();
   const [volume, setVolume] = useState<number>(Number(getLocalStorage("volume")) || 50);
+  const [isMute, setIsMute] = useState<boolean>(false);
+
+  const [time, setTime] = useState<{ min: string, sec: string }>({
+    min: "0",
+    sec: "0"
+  });
+  const [currTime, setCurrTime] = useState<{ min: string, sec: string }>({
+    min: "0",
+    sec: "0"
+  });
+
+  const [seconds, setSeconds] = useState<number>(0);
 
   const [play, {pause, duration, sound}] = useSound(
     music.song_path,
     {
-      volume: volume/10,
+      volume: isMute ? 0 : volume / 10,
       onplay: (): void => {
         player.setIsPlay(true);
       },
       onend: (): void => {
-        player.setIsPlay(false);
         onPlayNext();
       },
       onpause: (): void => player.setIsPlay(false),
@@ -66,25 +79,40 @@ const HeaderMusic = ({player, music}: { player: PlayerStore, music: Music }) => 
     player.setId(prevSong);
   };
 
+  const getVolumeIcon = () => {
+    if (volume === 0 || isMute) {
+      return <VolumeX onClick={() => setIsMute(prev => !prev)}
+                      className="cursor-pointer text-primary hover:text-primary-foreground transition" size={30}/>;
+    }
+
+    if (volume < 6) {
+      return <Volume1 onClick={() => setIsMute(prev => !prev)}
+                      className="cursor-pointer text-primary hover:text-primary-foreground transition" size={30}/>;
+    }
+    return <Volume2 onClick={() => setIsMute(prev => !prev)}
+                    className="cursor-pointer text-primary hover:text-primary-foreground transition" size={30}/>;
+  };
+
   const handleVolume = (value: number[]): void => {
-    localStorage.setItem("volume", String(value[0]));
+    setLocalStorage({key: "volume", value: String(value[0])});
     setVolume(value[0]);
   };
 
   const handlePlay = (): void => {
     if (!player.isPlay) {
-      play();
       player.setIsPlay(true);
-    } else {
-      pause();
-      player.setIsPlay(false);
+      return;
     }
+
+    player.setIsPlay(false);
+  };
+
+  const handleDuration = (newValue: [number]): void => {
+    sound.seek([newValue[0]]);
   };
 
   useEffect(() => {
-    if (sound) {
-      sound.play();
-    }
+    sound?.play();
 
     return (): void => {
       sound?.unload();
@@ -105,6 +133,33 @@ const HeaderMusic = ({player, music}: { player: PlayerStore, music: Music }) => 
       setLocalStorage({key: "volume", value: "5"});
     }
   }, [volume]);
+
+  useEffect((): void => {
+    if (duration) {
+      const sec: number = duration / 1000;
+      const min: string = String(Math.floor(sec / 60));
+      const secRemain: string = String(Math.floor(sec % 60));
+      setTime({
+        min: min,
+        sec: secRemain
+      });
+    }
+  }, [player.isPlay, duration]);
+
+  useEffect(() => {
+    const interval = setInterval((): void => {
+      if (sound) {
+        setSeconds(sound.seek([]));
+        const min: string = String(Math.floor(sound.seek([]) / 60));
+        const sec: string = String(Math.floor(sound.seek([]) % 60));
+        setCurrTime({
+          min,
+          sec
+        });
+      }
+    }, 1000);
+    return (): void => clearInterval(interval);
+  }, [sound]);
 
   return (
     <nav className={cn("flex items-center gap-x-5", color)}>
@@ -129,18 +184,23 @@ const HeaderMusic = ({player, music}: { player: PlayerStore, music: Music }) => 
           </h2>
         </DrawerTrigger>
         <DrawerContent className={cn("w-full", color)}>
-          <div className="flex flex-col items-center justify-center py-5">
-            <DrawerHeader>
-              <Slider
-                className="w-[200px]"
-                defaultValue={[volume]}
-                max={10}
-                step={1}
-                value={[volume]}
-                onValueChange={(e) => handleVolume(e)}
-              />
+          <div className="flex flex-col items-center justify-center py-5 gap-y-4">
+            <DrawerHeader className="flex items-center gap-x-4">
+              <div className="flex items-center gap-x-3">
+                {getVolumeIcon()}
+                <Slider
+                  className="w-[200px]"
+                  defaultValue={[volume]}
+                  max={10}
+                  step={1}
+                  value={[volume]}
+                  onValueChange={(e) => handleVolume(e)}
+                />
+              </div>
             </DrawerHeader>
             <DrawerMusic musics={player.ids}/>
+            <MusicTrackSlider currTime={currTime} time={time} value={seconds} onChange={handleDuration}
+                              duration={duration!}/>
           </div>
         </DrawerContent>
       </Drawer>
