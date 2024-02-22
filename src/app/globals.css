@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body,
+html {
+  height: 100%;
+}
+
 .mask {
  -webkit-mask: -webkit-linear-gradient(#000 75%,#0002 95%,#0000);
 }

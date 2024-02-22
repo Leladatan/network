@@ -10,6 +10,8 @@ import AvatarModal from "@/components/modals/avatar-modal";
 import PhotosModal from "@/components/modals/photos-modal";
 import PhotoViewModal from "@/components/modals/photo-view-modal";
 import AlbumModal from "@/components/modals/album-modal";
+import MusicAddModal from "@/components/modals/music-add-modal";
+import PlaylistAddModal from "@/components/modals/playlist-add-modal";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -33,14 +35,16 @@ const ModalProvider = () => {
 
   return (
     <>
-      <AcceptDangerZoneModal />
-      <AcceptModal />
-      <AcceptPassword />
-      <BannerModal />
-      <AvatarModal />
-      <PhotosModal />
-      <PhotoViewModal />
-      <AlbumModal />
+      <AcceptDangerZoneModal/>
+      <AcceptModal/>
+      <AcceptPassword/>
+      <BannerModal/>
+      <AvatarModal/>
+      <PhotosModal/>
+      <PhotoViewModal/>
+      <AlbumModal/>
+      <MusicAddModal/>
+      <PlaylistAddModal/>
     </>
   );
 };

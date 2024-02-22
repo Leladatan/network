@@ -14,10 +14,11 @@ import {useState} from "react";
 import {ProfileDelete} from "@/actions/profile/profile-delete";
 import {toast} from "@/components/ui/use-toast";
 import {signOut} from "next-auth/react";
+import {useColor} from "@/hooks/use-color";
 
 const AcceptDangerZoneModal = () => {
   const {isOpen, onClose, type, data} = useModal();
-
+  const {color} = useColor();
   const {user} = data;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -48,17 +49,17 @@ const AcceptDangerZoneModal = () => {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className={color}>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogTitle className="text-primary">Are you absolutely sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. This will permanently delete your account
             and remove your data from our servers.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button disabled={isLoading} onClick={onClose}>Cancel</Button>
-          <Button disabled={isLoading} onClick={handleDelete}>Continue</Button>
+          <Button disabled={isLoading} className="text-primary-foreground" onClick={onClose}>Cancel</Button>
+          <Button disabled={isLoading} className="text-primary-foreground" onClick={handleDelete}>Continue</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

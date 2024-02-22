@@ -5,9 +5,14 @@ import {Music} from "@prisma/client";
 import usePlayer from "@/hooks/use-player";
 import {cn} from "@/lib/utils";
 import {ScaleLoader} from "react-spinners";
+import {useColor} from "@/hooks/use-color";
+import {colorsWithHex} from "@/utils/constants/colors";
 
 const MusicItem = ({music, onPlay}: { music: Music, onPlay: () => void }) => {
   const player = usePlayer();
+  const {color} = useColor();
+
+  const colorUI = colorsWithHex.find(hex => hex.label === color);
 
   const handlePlay = (): void => {
     onPlay();
@@ -25,7 +30,7 @@ const MusicItem = ({music, onPlay}: { music: Music, onPlay: () => void }) => {
       <div className="relative w-full flex items-center justify-center">
         <Image src={music.image_path} alt={"Image song"} width={225} height={225} className={"rounded-xl"}/>
         {(player.activeMusic?.id === music.id && player.isPlay) &&
-          <ScaleLoader className="absolute opacity-70" color={"purple"}/>}
+          <ScaleLoader className="absolute opacity-70" color={colorUI?.loader || "black"} />}
       </div>
       <div className="flex flex-col items-center justify-center gap-y-2">
         <h4 className="truncate">{music.title}</h4>

@@ -17,12 +17,13 @@ import {Button} from "@/components/ui/button";
 import {ProfileSettings} from "@/actions/profile/settings/settings-id";
 import {useUser} from "@/hooks/use-user";
 import {useRouter} from "next/navigation";
+import {useColor} from "@/hooks/use-color";
 
 const AcceptPassword = () => {
   const {isOpen, onClose, type, data} = useModal();
   const {user} = data;
   const {user: OldUser} = useUser();
-
+  const {color} = useColor();
   const router = useRouter();
 
   const [password, setPassword] = useState<string>("");
@@ -83,9 +84,9 @@ const AcceptPassword = () => {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className={color}>
         <DialogHeader>
-          <DialogTitle>Some changes</DialogTitle>
+          <DialogTitle className="text-primary">Some changes</DialogTitle>
           <DialogDescription>
             To confirm the changes to your profile, please enter the password.
           </DialogDescription>
@@ -95,8 +96,8 @@ const AcceptPassword = () => {
           <Input disabled={isLoading} value={password} type={"password"} onChange={(e) => setPassword(e.target.value)} placeholder={"Enter your password to confirm"} />
         </div>
         <DialogFooter>
-          <Button disabled={isLoading} onClick={onClose}>Cancel</Button>
-          <Button disabled={isLoading || !password} onClick={handleSave}>Continue</Button>
+          <Button disabled={isLoading} onClick={onClose} className="text-primary-foreground">Cancel</Button>
+          <Button disabled={isLoading || !password} onClick={handleSave} className="text-primary-foreground">Continue</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

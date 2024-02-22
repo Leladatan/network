@@ -36,10 +36,10 @@ model User {
   photos Photo[] @relation("UserOwnerPhoto")
   albums Album[] @relation("UserOwnerAlbum")
 
-  musics_list MusicList? @relation("UserAddMusic")
+  musics_list MusicList[] @relation("UserAddMusic")
 
-  createdAt DateTime    @default(now())
-  updateAt  DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
 
   @@index([id])
 }
@@ -214,23 +214,24 @@ model Music {
   image_path String
   song_path  String @unique
 
-  music_listId String?
-  music_list MusicList? @relation("Musics", fields: [music_listId], references: [id])
-
-  createdAt DateTime    @default(now())
-  updateAt  DateTime    @updatedAt
-
-  @@index([music_listId])
-}
-
-model MusicList {
-  id      String @id @default(uuid())
-
-  musics   Music[]  @relation("Musics")
-
-  userId    String @unique
-  user      User     @relation("UserAddMusic", fields: [userId], references: [id])
+  MusicList MusicList[] @relation("Music")
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
+}
+
+model MusicList {
+  id String @id @default(uuid())
+
+  musicId String
+  music   Music  @relation("Music", fields: [musicId], references: [id])
+
+  userId String
+  user   User   @relation("UserAddMusic", fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([musicId])
 }

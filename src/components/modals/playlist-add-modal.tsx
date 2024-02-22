@@ -1,39 +1,32 @@
 "use client";
 
-import * as z from "zod";
-import {type FC, useEffect, useState} from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
+import {useEffect, useState} from "react";
+import {useModal} from "@/hooks/use-modal";
+import {useColor} from "@/hooks/use-color";
+import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {toast} from "@/components/ui/use-toast";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {cn} from "@/lib/utils";
 import {Form, FormControl, FormField, FormItem} from "@/components/ui/form";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import FileUpload from "@/components/file-upload";
-import {useRouter} from "next/navigation";
-import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
-import {useModal} from "@/hooks/use-modal";
-import {toast} from "@/components/ui/use-toast";
-import {PhotosAdd} from "@/actions/photos/photos-add";
-import {AlbumPhotosAdd} from "@/actions/album/album-photos-add";
-import {cn} from "@/lib/utils";
-import {useColor} from "@/hooks/use-color";
+import MultiSelect from "@/components/ui/multi-select";
 
 const formSchema = z.object({
-  photos: z.string().min(1),
+  title: z.string().min(1),
+  photo: z.string().min(1),
 });
 
-const PhotosModal: FC = () => {
+const PlaylistAddModal = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
-  const {isOpen, onClose, type, data, func} = useModal();
-  const {userId, albumId} = data;
-  const router: AppRouterInstance = useRouter();
+  const {isOpen, onClose, type, data} = useModal();
   const {color} = useColor();
+  const router = useRouter();
 
   useEffect((): void => {
     setIsMounted(true);
@@ -42,28 +35,16 @@ const PhotosModal: FC = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      photos: "",
+      title: "",
+      photo: "",
     }
   });
 
   const isSubmitting: boolean = form.formState.isSubmitting;
-  const isOpenModal: boolean = isOpen && type === "upload-photos" || isOpen && type === "upload-album-photos" || isOpen && type === "upload-post-photos";
+  const isOpenModal: boolean = isOpen && type === "playlist-add";
 
   const onSubmit = async (values: z.infer<typeof formSchema>): Promise<void> => {
     try {
-      if (func && type === "upload-post-photos") {
-        func(values.photos);
-      }
-
-      if (userId) {
-        if (type === "upload-album-photos" && albumId) {
-          await AlbumPhotosAdd(userId, albumId, values);
-        }
-
-        if (type === "upload-photos") {
-          await PhotosAdd(userId, values);
-        }
-      }
 
       toast({
         title: "Your files have been uploaded successfully"
@@ -87,24 +68,41 @@ const PhotosModal: FC = () => {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent className={cn("text-primary p-0", color)}>
+      <DialogContent className={cn("bg-neutral-300 text-black dark:bg-neutral-800 dark:text-white p-0", color)}>
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-center text-2xl font-bold">
-            Download images
+          <DialogTitle className="text-primary text-center text-2xl font-bold">
+            Adding playlist
           </DialogTitle>
-          <DialogDescription className="text-center">
-            Give your photos for profile. You can always change it later.
-          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
             className="space-y-8"
             onSubmit={form.handleSubmit(onSubmit)}
           >
+            <div className="flex flex-col gap-y-4 px-6">
+              <FormField
+                disabled={isSubmitting}
+                control={form.control}
+                name={"title"}
+                render={({field}) => (
+                  <FormItem>
+                    <FormControl>
+                      <Label htmlFor={field.name} className="flex flex-col gap-y-2">
+                        Name playlist
+                        <Input name={field.name} id="title" value={field.value} onChange={field.onChange} type="text"
+                               placeholder="Enter name a playlist"/>
+                      </Label>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <MultiSelect options={[]} name={"music"} placeholder={"Choose music"}/>
+            </div>
             <div className="flex flex-col items-center justify-center text-center mb-3">
               <FormField
+                disabled={isSubmitting}
                 control={form.control}
-                name="photos"
+                name="photo"
                 render={({field}) => (
                   <FormItem>
                     <FormControl>
@@ -131,4 +129,4 @@ const PhotosModal: FC = () => {
   );
 };
 
-export default PhotosModal;
+export default PlaylistAddModal;

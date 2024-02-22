@@ -21,6 +21,8 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import {useModal} from "@/hooks/use-modal";
 import {toast} from "@/components/ui/use-toast";
 import {ProfileAvatar} from "@/actions/profile/avatar/profile-avatar";
+import {useColor} from "@/hooks/use-color";
+import {cn} from "@/lib/utils";
 
 const formSchema = z.object({
   avatar: z.string().min(1),
@@ -31,6 +33,7 @@ const AvatarModal: FC = () => {
   const {isOpen, onClose, type, data} = useModal();
   const {user} = data;
   const router: AppRouterInstance = useRouter();
+  const {color} = useColor();
 
   useEffect((): void => {
     setIsMounted(true);
@@ -80,9 +83,9 @@ const AvatarModal: FC = () => {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent className="bg-neutral-300 text-black dark:bg-neutral-800 dark:text-white p-0">
+      <DialogContent className={cn("text-primary p-0", color)}>
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-center text-2xl font-bold">
+          <DialogTitle className="text-primaty text-center text-2xl font-bold">
             Customize your avatar
           </DialogTitle>
           <DialogDescription className="text-center">
@@ -114,7 +117,7 @@ const AvatarModal: FC = () => {
                 )}
               />
             </div>
-            <DialogFooter className="bg-gray-600 px-6 py-4">
+            <DialogFooter className="bg-primary/20 px-6 py-4 rounded-b-xl">
               <Button disabled={isSubmitting}>
                 Save
               </Button>

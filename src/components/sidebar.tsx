@@ -57,13 +57,13 @@ const Sidebar = () => {
   ], [pathname]);
 
   return (
-    <Box className="h-full">
+    <Box className="h-fit">
       <ul className="flex flex-col gap-y-3">
         {router.map(route => (
-          <li key={route.url} className="flex items-center gap-x-2 group transition">
-            <route.icon size={20} className={cn("transition", route.active ? "text-primary" : "group-hover:text-primary")}/>
+          <li key={route.url} className="flex items-center gap-x-2 group transition w-full">
+            <route.icon size={25} className={cn("transition", route.active ? "text-primary" : "group-hover:text-primary")}/>
             <Link
-              className={cn("transition", route.active ? "text-primary" : "group-hover:text-primary")}
+              className={cn("transition w-full", route.active ? "text-primary" : "group-hover:text-primary")}
               href={route.url === "/profile" ? `/profile/${user?.id}` : route.url}
             >
               {route.label}

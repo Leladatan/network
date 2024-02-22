@@ -5,7 +5,17 @@ import {Music} from "@prisma/client";
 import useSound from "use-sound";
 import usePlayer from "@/hooks/use-player";
 import {Button} from "@/components/ui/button";
-import {PauseCircle, PlayCircle, SkipBack, SkipForward, Volume1, Volume2, VolumeX} from "lucide-react";
+import {
+  MinusCircle,
+  PauseCircle,
+  PlayCircle,
+  PlusCircle, Repeat,
+  SkipBack,
+  SkipForward,
+  Volume1,
+  Volume2,
+  VolumeX
+} from "lucide-react";
 import {Drawer, DrawerContent, DrawerHeader, DrawerTrigger} from "@/components/ui/drawer";
 import DrawerMusic from "@/components/drawer-music";
 import {useColor} from "@/hooks/use-color";
@@ -13,13 +23,23 @@ import {cn} from "@/lib/utils";
 import {Slider} from "@/components/ui/slider";
 import {useLocalStorage} from "@/hooks/use-local-storage";
 import MusicTrackSlider from "@/components/music-track-slider";
+import {toast} from "@/components/ui/use-toast";
+import {useRouter} from "next/navigation";
+import {MusicListAddSong} from "@/actions/music/music-list/music-list-add-song";
+import {useSession} from "next-auth/react";
+import {MusicListDeleteSong} from "@/actions/music/music-list/music-list-delete-song";
+import {isMusicLike} from "@/actions/music/is-music-like";
 
 const HeaderMusic = ({music}: { music: Music }) => {
+  const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const {color} = useColor();
   const player = usePlayer();
+  const router = useRouter();
   const {getLocalStorage, setLocalStorage} = useLocalStorage();
+  const [isLikeSong, setIsLikeSong] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(Number(getLocalStorage("volume")) || 50);
   const [isMute, setIsMute] = useState<boolean>(false);
+  const [isRepeat, setIsRepeat] = useState<boolean>(!!getLocalStorage("repeat") || false);
 
   const [time, setTime] = useState<{ min: string, sec: string }>({
     min: "0",
@@ -98,6 +118,18 @@ const HeaderMusic = ({music}: { music: Music }) => {
     setVolume(value[0]);
   };
 
+  const handleRepeat = (): void => {
+    if (isRepeat) {
+      setLocalStorage({key: "repeat", value: ""});
+    }
+
+    if (!isRepeat) {
+      setLocalStorage({key: "repeat", value: "True"});
+    }
+
+    setIsRepeat(prev => !prev);
+  };
+
   const handlePlay = (): void => {
     if (!player.isPlay) {
       player.setIsPlay(true);
@@ -111,6 +143,48 @@ const HeaderMusic = ({music}: { music: Music }) => {
     sound.seek([newValue[0]]);
   };
 
+  const handleAddSong = async () => {
+    try {
+      if (player.activeMusic) {
+        await MusicListAddSong(currentUser.id, player.activeMusic.id);
+      }
+
+      toast({
+        title: "The song has been successfully added to your favorites list"
+      });
+
+      setIsLikeSong(prev => !prev);
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      toast({
+        variant: "destructive",
+        title: "There was some mistake with adding music"
+      });
+    }
+  };
+
+  const handleDeleteSong = async () => {
+    try {
+      if (player.activeMusic) {
+        await MusicListDeleteSong(currentUser.id, player.activeMusic.id);
+      }
+
+      toast({
+        title: "The song has been successfully deleted from your favorites list"
+      });
+
+      setIsLikeSong(prev => !prev);
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      toast({
+        variant: "destructive",
+        title: "There was some mistake with deleting music"
+      });
+    }
+  };
+
   useEffect(() => {
     sound?.play();
 
@@ -118,6 +192,15 @@ const HeaderMusic = ({music}: { music: Music }) => {
       sound?.unload();
     };
   }, [sound]);
+
+  useEffect(() => {
+    (async () => {
+      if (player.activeMusic) {
+        const isLike = await isMusicLike(currentUser.id, player.activeMusic.id);
+        setIsLikeSong(isLike);
+      }
+    })();
+  }, [player.activeMusic]);
 
   useEffect((): void => {
     if (player.isPlay) {
@@ -161,6 +244,13 @@ const HeaderMusic = ({music}: { music: Music }) => {
     return (): void => clearInterval(interval);
   }, [sound]);
 
+  useEffect((): void => {
+    if (isRepeat && String(seconds + 1).slice(0, 3) === String(duration).slice(0, 3) ||
+      isRepeat && String(seconds + 0.5).slice(0, 3) === String(duration).slice(0, 3)) {
+      setSeconds(sound.seek([0]));
+    }
+  }, [sound, isRepeat, duration, seconds]);
+
   return (
     <nav className={cn("flex items-center gap-x-5", color)}>
       <div className="flex items-center justify-center gap-x-4">
@@ -197,6 +287,18 @@ const HeaderMusic = ({music}: { music: Music }) => {
                   onValueChange={(e) => handleVolume(e)}
                 />
               </div>
+              {!isLikeSong ?
+                <Button variant={"ghost"} className="group" onClick={() => handleAddSong()}>
+                  <PlusCircle className="group-hover:text-primary transition"/>
+                </Button>
+                :
+                <Button variant={"ghost"} className="group" onClick={() => handleDeleteSong()}>
+                  <MinusCircle className="group-hover:text-primary transition"/>
+                </Button>
+              }
+              <Button variant={"ghost"} onClick={handleRepeat}>
+                <Repeat className={cn("text-primary-foreground", isRepeat && "text-primary")} />
+              </Button>
             </DrawerHeader>
             <DrawerMusic musics={player.ids}/>
             <MusicTrackSlider currTime={currTime} time={time} value={seconds} onChange={handleDuration}
@@ -204,6 +306,18 @@ const HeaderMusic = ({music}: { music: Music }) => {
           </div>
         </DrawerContent>
       </Drawer>
+      {!isLikeSong ?
+        <Button variant={"ghost"} className="group" onClick={() => handleAddSong()}>
+          <PlusCircle className="group-hover:text-primary transition"/>
+        </Button>
+        :
+        <Button variant={"ghost"} className="group" onClick={() => handleDeleteSong()}>
+          <MinusCircle className="group-hover:text-primary transition"/>
+        </Button>
+      }
+      <Button variant={"ghost"} onClick={handleRepeat}>
+        <Repeat className={cn("text-primary-foreground", isRepeat && "text-primary")} />
+      </Button>
     </nav>
   );
 };

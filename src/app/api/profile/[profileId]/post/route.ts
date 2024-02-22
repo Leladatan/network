@@ -2,7 +2,7 @@ import {NextResponse} from "next/server";
 import {db} from "@/lib/db";
 import {Post} from "@prisma/client";
 
-export const POST = async (req: Request, {params}: {params: {profileId: string}}) => {
+export const POST = async (req: Request, {params}: { params: { profileId: string } }) => {
   try {
     const id: string = params.profileId;
     const {title, userId, authorId, photo} = await req.json();
@@ -19,20 +19,22 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
       return new NextResponse("Author ID is required", {status: 400});
     }
 
-    await db.photo.create({
-      data: {
-        photo,
-        userId,
-        type: "post",
-      }
-    });
+    if (photo) {
+      await db.photo.create({
+        data: {
+          photo,
+          userId,
+          type: "post",
+        }
+      });
+    }
 
     const post: Post = await db.post.create({
       data: {
         title,
         authorId,
         userId,
-        photo
+        photo: photo ? photo : null,
       }
     });
 

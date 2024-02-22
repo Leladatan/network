@@ -22,6 +22,7 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {AlbumAdd} from "@/actions/album/album-add";
 import {AlbumEdit} from "@/actions/album/album-edit";
+import {useColor} from "@/hooks/use-color";
 
 const formSchema = z.object({
   name: z.string().min(1).max(40),
@@ -33,6 +34,7 @@ const AlbumModal = () => {
   const {isOpen, onClose, type, data} = useModal();
   const {userId, album} = data;
   const router: AppRouterInstance = useRouter();
+  const {color} = useColor();
 
   const handleClose = (): void => {
     form.reset();
@@ -97,9 +99,9 @@ const AlbumModal = () => {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent className={color}>
         <DialogHeader>
-          <DialogTitle>{album ? "Edit an album" : "Adding a new album"}</DialogTitle>
+          <DialogTitle className="text-primary">{album ? "Edit an album" : "Adding a new album"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -139,7 +141,7 @@ const AlbumModal = () => {
                 />
               </div>
             )}
-            <DialogFooter className="bg-gray-600 px-6 py-4 rounded-xl">
+            <DialogFooter className="bg-primary/20 px-6 py-4 rounded-xl">
               <Button onClick={onClose}>Cancel</Button>
               <Button disabled={isSubmitting}>
                 Save

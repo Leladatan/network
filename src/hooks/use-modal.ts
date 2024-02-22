@@ -1,7 +1,8 @@
 import {create} from "zustand";
 import {User} from "@/types/user";
-import {Comment, Photo} from "@prisma/client";
+import {Comment} from "@prisma/client";
 import {AlbumWithPhotos} from "@/app/(root)/photos/page";
+import {MusicListType} from "@/app/(root)/music/page";
 
 export type ModalType =
   "accept" |
@@ -16,6 +17,10 @@ export type ModalType =
   "album-edit" |
   "upload-album-photos" |
   "upload-post-photos" |
+  "music-add" |
+  "playlist" |
+  "playlist-add" |
+  "playlist-music-select" |
   "comments";
 
 interface ModalData {
@@ -25,6 +30,7 @@ interface ModalData {
   albumId?: string;
   photo?: string;
   album?: AlbumWithPhotos;
+  userMusics?: MusicListType[];
 }
 
 interface ModalStore {
