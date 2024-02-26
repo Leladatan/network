@@ -15,7 +15,6 @@ import {useSession} from "next-auth/react";
 import {ProfileSubscriberAdd} from "@/actions/profile/subscribe/profile-subscribe-add";
 import {ProfileSubscriberDelete} from "@/actions/profile/subscribe/profile-subscribe-delete";
 import {isFriendThisUser, IsSubscriberThisUser} from "@/actions/is-friend";
-import {rotate} from "next/dist/server/lib/squoosh/impl";
 import {useColor} from "@/hooks/use-color";
 
 const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {

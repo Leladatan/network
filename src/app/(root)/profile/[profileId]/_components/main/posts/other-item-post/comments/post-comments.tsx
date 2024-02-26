@@ -7,6 +7,7 @@ import PostCommentItem
 import {Dispatch, SetStateAction} from "react";
 import {X} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {Button} from "@/components/ui/button";
 
 const PostComments = ({post, setIsViewComment}: {
   post: PostWithUser,
@@ -18,7 +19,9 @@ const PostComments = ({post, setIsViewComment}: {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild className="self-end">
-            <X size={20} className="cursor-pointer" onClick={() => setIsViewComment(false)}/>
+            <Button variant={"ghost"} size={"sm"} onClick={() => setIsViewComment(false)}>
+              <X size={20}/>
+            </Button>
           </TooltipTrigger>
           <TooltipContent>
             <p>Close the Comments window</p>

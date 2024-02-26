@@ -1,6 +1,6 @@
 "use client";
 
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, useState} from "react";
 import {maxLengthForPostTitle} from "@/utils/constants/maxLength";
 import {Button} from "@/components/ui/button";
 import {Textarea} from "@/components/ui/textarea";
@@ -17,11 +17,15 @@ import {useModal} from "@/hooks/use-modal";
 import Image from "next/image";
 import {useColor} from "@/hooks/use-color";
 import {cn} from "@/lib/utils";
+import {MusicListType} from "@/app/(root)/music/page";
+import Box from "@/components/ui/box";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
-const ProfileMain = ({posts, user, subscribers_online}: {
+const ProfileMain = ({posts, user, subscribers_online, musics}: {
   posts: PostWithUser[],
   user: UserWithSubscribers,
-  subscribers_online: SubscribersOnlineWithUser[]
+  subscribers_online: SubscribersOnlineWithUser[],
+  musics: MusicListType[]
 }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const [photo, setPhoto] = useState<string>("");
@@ -84,41 +88,56 @@ const ProfileMain = ({posts, user, subscribers_online}: {
   return (
     <main className={cn("flex gap-x-10 w-full mt-32", color)}>
       <div className="flex flex-col gap-y-4 w-1/2">
-        {isOwner && (
-          <>
-            <Textarea
-              disabled={isLoading}
-              className="max-h-[200px] transition"
-              value={value}
-              onFocus={handlerFocus}
-              onBlur={handlerBlur}
-              onChange={(e) => handlerValue(e)}
-              placeholder={"What's new for you?"}
-              maxLength={maxLengthForPostTitle}
-            />
-            {photo && (
-              <Image src={photo} alt={"Image in post"} width={50} height={50}/>
-            )}
-            <div
-              className="group self-end cursor-pointer"
-            >
-              <Paperclip className="text-primary-foreground/50 group-hover:text-primary transition" size={20} onClick={() => onOpen("upload-post-photos", {}, (values: string | undefined) => handlerPhoto(values))}/>
-            </div>
-          </>
-        )}
-        {(isFocus || value || photo) && <Button
-          onClick={handlePostAdd}
-          disabled={isLoading}
-          size={"sm"}
-          className="self-end w-1/2 animate-appear"
-        >
-          To publish
-        </Button>
-        }
+        <Box className="flex flex-col gap-y-3">
+          {isOwner && (
+            <>
+              <Textarea
+                disabled={isLoading}
+                className="max-h-[200px] transition"
+                value={value}
+                onFocus={handlerFocus}
+                onBlur={handlerBlur}
+                onChange={(e) => handlerValue(e)}
+                placeholder={"What's new for you?"}
+                maxLength={maxLengthForPostTitle}
+              />
+              {photo && (
+                <Image src={photo} alt={"Image in post"} width={50} height={50}/>
+              )}
+              <div className="flex items-center justify-end gap-x-4">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant={"ghost"}
+                        className="group flex items-center justify-center cursor-pointer"
+                      >
+                        <Paperclip className="text-primary-foreground/50 group-hover:text-primary transition" size={20}
+                                   onClick={() => onOpen("upload-post-photos", {}, (values: string | undefined) => handlerPhoto(values))}/>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Attach a file
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                {(isFocus || value || photo) && <Button
+                  onClick={handlePostAdd}
+                  disabled={isLoading}
+                  size={"sm"}
+                  className="self-end w-1/2 animate-appear"
+                >
+                  To publish
+                </Button>
+                }
+              </div>
+            </>
+          )}
+        </Box>
         <ProfilePosts posts={posts}/>
       </div>
       <div className="flex flex-col gap-y-3 w-1/2">
-        <ProfileSidebar user={user}/>
+        <ProfileSidebar user={user} musics={musics}/>
       </div>
     </main>
   );

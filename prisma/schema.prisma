@@ -38,6 +38,8 @@ model User {
 
   musics_list MusicList[] @relation("UserAddMusic")
 
+  playlists Playlist[] @relation("UserPlaylist")
+
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
@@ -214,7 +216,8 @@ model Music {
   image_path String
   song_path  String @unique
 
-  MusicList MusicList[] @relation("Music")
+  musicList MusicList[] @relation("Music")
+  playlist  Cringe[]    @relation("Playlist")
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
@@ -234,4 +237,36 @@ model MusicList {
 
   @@index([userId])
   @@index([musicId])
+}
+
+model Cringe {
+  id String @id @default(uuid())
+
+  musicId String
+  music   Music  @relation("Playlist", fields: [musicId], references: [id])
+
+  playlistId String
+  playlist   Playlist @relation("Cringe", fields: [playlistId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([musicId])
+  @@index([playlistId])
+}
+
+model Playlist {
+  id    String @id @default(uuid())
+  title String
+  photo String
+
+  musics Cringe[] @relation("Cringe")
+
+  userId String
+  user   User   @relation("UserPlaylist", fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
 }

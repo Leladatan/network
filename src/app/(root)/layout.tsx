@@ -17,6 +17,7 @@ const Layout = async ({children}: {children: React.ReactNode}) => {
     where: {
       userId: session.user.id
     },
+    take: 30,
   });
 
   const notification_unchecked: number = notifications.filter(notification => !notification.checked).length;

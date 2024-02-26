@@ -57,7 +57,7 @@ const Sidebar = () => {
   ], [pathname]);
 
   return (
-    <Box className="h-fit">
+    <Box className="h-fit sticky top-2">
       <ul className="flex flex-col gap-y-3">
         {router.map(route => (
           <li key={route.url} className="flex items-center gap-x-2 group transition w-full">

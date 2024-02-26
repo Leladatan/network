@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import uniqid from "uniqid";
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
 import {useModal} from "@/hooks/use-modal";
 import {toast} from "@/components/ui/use-toast";
 import {useForm} from "react-hook-form";
@@ -27,6 +27,7 @@ import {useColor} from "@/hooks/use-color";
 import {cn} from "@/lib/utils";
 import {XIcon} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {useElementOutside} from "@/hooks/use-element-outside";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -37,10 +38,12 @@ const formSchema = z.object({
 const MusicAddModal = () => {
   const [songFile, setSongFile] = useState<File | null>(null);
   const [isMounted, setIsMounted] = useState<boolean>(false);
-  const {isOpen, onClose, type, func} = useModal();
+  const {isOpen, onClose, type} = useModal();
   const {color} = useColor();
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
+
+  const ref = useRef(null);
 
   useEffect((): void => {
     setIsMounted(true);
@@ -102,6 +105,7 @@ const MusicAddModal = () => {
         title: "Your files have been uploaded successfully"
       });
 
+      setSongFile(null);
       form.reset();
       router.refresh();
       onClose();
@@ -114,13 +118,18 @@ const MusicAddModal = () => {
     }
   };
 
+  useElementOutside(ref, (): void => {
+    setSongFile(null);
+    form.reset();
+  });
+
   if (!isMounted) {
     return null;
   }
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent className={cn("bg-neutral-300 text-black dark:bg-neutral-800 dark:text-white p-0", color)}>
+      <DialogContent ref={ref} className={cn("bg-neutral-300 text-black dark:bg-neutral-800 dark:text-white p-0", color)}>
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-primary text-center text-2xl font-bold">
             Adding song

@@ -4,6 +4,8 @@ import {db} from "@/lib/db";
 import ProfileMain from "@/app/(root)/profile/[profileId]/_components/main";
 import {exclude} from "@/lib/exclude";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
+import {MusicListGetWithSearch} from "@/actions/music/music-list/music-list-get-with-search";
+import {MusicListType} from "@/app/(root)/music/page";
 
 export type PostWithUser = Post & {
   author: Omit<User, "password">;
@@ -49,10 +51,12 @@ const ProfileIdPage = async (user: UserWithSubscribers) => {
 
   const subscribers_online: SubscribersOnlineWithUser[] = subscribers.filter(item => item.subscriber.online);
 
+  const musics: MusicListType[] = await MusicListGetWithSearch(user.id);
+
   return (
     <div className="flex flex-col">
       <ProfileHeader user={user}/>
-      <ProfileMain user={user} posts={posts} subscribers_online={subscribers_online} />
+      <ProfileMain user={user} posts={posts} subscribers_online={subscribers_online} musics={musics} />
     </div>
   );
 };

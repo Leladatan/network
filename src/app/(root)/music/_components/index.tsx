@@ -9,58 +9,68 @@ import MusicItem from "@/app/(root)/music/_components/music-item";
 import {Button} from "@/components/ui/button";
 import {PlusCircle} from "lucide-react";
 import {useModal} from "@/hooks/use-modal";
-import {MusicListType} from "@/app/(root)/music/page";
-import {useState} from "react";
+import {MusicListType, PlaylistType} from "@/app/(root)/music/page";
 import PlaylistMusic from "@/app/(root)/music/_components/playlist-music";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
-const MusicPage = ({musics, userMusics}: { musics: Music[], userMusics: MusicListType[] }) => {
-  const [tab, setTab] = useState<"main" | "my" | "playlists">("main");
+const MusicPage = ({musics, userMusics, playlists}: {
+  musics: Music[],
+  userMusics: MusicListType[],
+  playlists: PlaylistType[]
+}) => {
   const {onPlay} = usePlay(musics);
   const {onOpen} = useModal();
 
-  const handleTab = (value: "main" | "my" | "playlists"): void => {
-    setTab(value);
-  };
-
   return (
-    <Box>
-      <Tabs defaultValue={"main"}>
-        <div className="flex justify-between items-center gap-x-4">
-          <TabsList className="mb-3">
-            <TabsTrigger value={"main"} onClick={() => handleTab("main")}>Main page</TabsTrigger>
-            <TabsTrigger value={"my"} onClick={() => handleTab("my")}>My music</TabsTrigger>
-            <TabsTrigger value={"playlists"} onClick={() => handleTab("playlists")}>Playlists</TabsTrigger>
+    <Tabs defaultValue={"main"} className="flex flex-col gap-y-4">
+      <Box className="flex justify-between items-center gap-x-4">
+          <TabsList>
+            <TabsTrigger value={"main"}>Main page</TabsTrigger>
+            <TabsTrigger value={"my"}>My music</TabsTrigger>
+            <TabsTrigger value={"playlists"}>Playlists</TabsTrigger>
           </TabsList>
-          <Button variant={"ghost"} onClick={() => onOpen("music-add")}>
-            <PlusCircle className={"text-primary"}/>
-          </Button>
-        </div>
-        {tab !== "playlists" && <InputSearch name={"search"} placeholder={"Search music..."}/>}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={"ghost"} onClick={() => onOpen("music-add")}>
+                <PlusCircle size={25} className={"text-primary"}/>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Adding music
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </Box>
+      <Box>
+        <InputSearch name={"search"} placeholder={"Search music or playlist..."}/>
+      </Box>
+      <Box>
         <TabsContent value={"main"}>
-          <div className="grid grid-cols-4 gap-10 mt-5">
+          <div className="grid grid-cols-4 gap-10">
             {musics.map(music => (
               <MusicItem key={music.id} music={music} onPlay={() => onPlay(music)}/>
             ))}
           </div>
         </TabsContent>
         <TabsContent value={"my"}>
-          <div className="grid grid-cols-4 gap-10 mt-5">
+          <div className="grid grid-cols-4 gap-10">
             {!!userMusics.length ?
               userMusics.map(song => (
                 <MusicItem key={song.music.id} music={song.music} onPlay={() => onPlay(song.music)}/>
               ))
-            :
+              :
               <h2>There is nothing in your favorites list</h2>
             }
           </div>
         </TabsContent>
         <TabsContent value={"playlists"}>
-          <div className="grid grid-cols-4 gap-10 mt-5">
-            <PlaylistMusic />
+          <div className="grid grid-cols-4 gap-10 items-center justify-center">
+            <PlaylistMusic playlists={playlists}/>
           </div>
         </TabsContent>
-      </Tabs>
-    </Box>
+      </Box>
+    </Tabs>
   );
 };
 

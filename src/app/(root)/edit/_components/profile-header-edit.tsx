@@ -33,7 +33,7 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
       await ProfileOptions(user.id, status);
 
       toast({
-        title: "Save"
+        title: "Your changes have been saved"
       });
 
       router.refresh();
@@ -138,7 +138,7 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
         {user.avatar &&
           <ProfileAvatar user={user} actions={ContextMenuItems} type={"edit"}/>
         }
-        <div className="self-end flex justify-between gap-x-2 pb-6 w-full">
+        <div className="self-end flex items-center justify-between gap-x-2 pb-6 w-full">
           <div className="flex flex-col gap-y-3">
             <p className="text-xl">{user.username}</p>
             <Input disabled={isLoading} value={status} onChange={handleStatus} placeholder={"How is your mood?"} />

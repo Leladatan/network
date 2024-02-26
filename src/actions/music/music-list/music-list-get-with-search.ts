@@ -1,6 +1,6 @@
 import {db} from "@/lib/db";
 
-export const MusicListGetWithSearch = async (userId: string, search: string) => {
+export const MusicListGetWithSearch = async (userId: string, search?: string) => {
   if (search) {
     const list = await db.musicList.findMany({
       where: {
@@ -9,6 +9,9 @@ export const MusicListGetWithSearch = async (userId: string, search: string) => 
       include: {
         music: true,
       },
+          orderBy: {
+      createdAt: "desc",
+    },
     });
 
     return list.filter(song => song.music.title.includes(search));
@@ -20,6 +23,9 @@ export const MusicListGetWithSearch = async (userId: string, search: string) => 
     },
     include: {
       music: true,
+    },
+        orderBy: {
+      createdAt: "desc",
     },
   });
 };

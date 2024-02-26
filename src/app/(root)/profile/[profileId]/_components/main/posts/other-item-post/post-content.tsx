@@ -61,13 +61,22 @@ const PostContent = ({handlerActions, isEdit, setIsEdit, post, isLoading}: props
             </TooltipProvider>
           </div>}
           <div className="self-end flex items-center gap-x-4">
-            <div className="group cursor-pointer"
-                 onClick={() => onOpen("upload-post-photos", {}, (values: string | undefined) => handlerPhoto(values))}>
-              <Paperclip
-                className="text-primary-foreground/50 group-hover:text-primary transition"
-                size={20}
-              />
-            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="group cursor-pointer"
+                          onClick={() => onOpen("upload-post-photos", {}, (values: string | undefined) => handlerPhoto(values))}>
+                    <Paperclip
+                      className="text-primary-foreground/50 group-hover:text-primary transition"
+                      size={20}
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Attach a file
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Button
               disabled={isLoading}
               onClick={() => setIsEdit(false)}

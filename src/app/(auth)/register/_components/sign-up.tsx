@@ -26,7 +26,6 @@ const SignUp = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    // TODO: Переписать на адекватные типы
     try {
       setIsLoading(true);
 

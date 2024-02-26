@@ -14,17 +14,20 @@ const ProfilePhotosPage = ({photos, albums}: { photos: Photo[], albums: AlbumWit
   const router = useRouter();
 
   return (
-    <Box>
-      <Tabs defaultValue={"photos"}>
-        <TabsList className="mb-3">
+    <Tabs defaultValue={"photos"} className="flex flex-col gap-y-4">
+      <Box>
+        <TabsList>
           <TabsTrigger value={"photos"}>Photos ({photos.length})</TabsTrigger>
           <TabsTrigger value={"albums"}>Albums ({albums.length})</TabsTrigger>
         </TabsList>
+      </Box>
+      <Box>
         <TabsContent value={"photos"}>
           <div className="columns-7">
             {!!photos.length ?
               photos.map(photo => (
-                <Image key={photo.id} src={photo.photo} alt={"Image"} onClick={() => onOpen("photo-view", {photo: photo.photo})}
+                <Image key={photo.id} src={photo.photo} alt={"Image"}
+                       onClick={() => onOpen("photo-view", {photo: photo.photo})}
                        width={100} height={100} className="w-full mb-5"/>
               ))
               :
@@ -55,8 +58,8 @@ const ProfilePhotosPage = ({photos, albums}: { photos: Photo[], albums: AlbumWit
             }
           </div>
         </TabsContent>
-      </Tabs>
-    </Box>
+      </Box>
+    </Tabs>
   );
 };
 

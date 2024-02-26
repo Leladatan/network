@@ -12,6 +12,7 @@ import {useOrigin} from "@/hooks/use-origin";
 import {usePathname} from "next/navigation";
 import {useSession} from "next-auth/react";
 import {cn} from "@/lib/utils";
+import {Button} from "@/components/ui/button";
 
 type props = {
   post: PostWithUser;
@@ -61,27 +62,30 @@ const PostHeader = ({post, handlerActions, setIsEdit, isLoading}: props) => {
             </Avatar>
             {post.author.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full"/>}
           </Link>
-          <h4 className="break-all"><Link href={`${origin}/profile/${post.author.id}`}>{post.author.username}</Link></h4>
+          <h4 className="break-all"><Link href={`${origin}/profile/${post.author.id}`}>{post.author.username}</Link>
+          </h4>
         </div>
         <span className="text-neutral-400">{getFormatData(new Date(post.createdAt))}</span>
       </div>
       {isOwner && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <MoreHorizontal className="self-start cursor-pointer"/>
+            <Button variant={"ghost"} className="self-start">
+              <MoreHorizontal/>
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {ContextMenuItems.map(item =>
-                <DropdownMenuItem
-                  disabled={isLoading}
-                  onClick={() => item.label === "Edit" ? setIsEdit(true) : item.handler(post.userId, post.id, item.type)}
-                  key={item.label}
-                  className={cn("flex items-center gap-x-3 cursor-pointer", item.label === "Delete" && "text-rose-500")}
-                >
-                  <item.icon size={15}/>
-                  <p>{item.label}</p>
-                </DropdownMenuItem>
-              )}
+              <DropdownMenuItem
+                disabled={isLoading}
+                onClick={() => item.label === "Edit" ? setIsEdit(true) : item.handler(post.userId, post.id, item.type)}
+                key={item.label}
+                className={cn("flex items-center gap-x-3 cursor-pointer", item.label === "Delete" && "text-rose-500")}
+              >
+                <item.icon size={15}/>
+                <p>{item.label}</p>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       )}

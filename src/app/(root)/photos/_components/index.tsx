@@ -9,20 +9,22 @@ import Box from "@/components/ui/box";
 
 const PhotosPage = ({photos, albums}: { photos: Photo[], albums: AlbumWithPhotos[] }) => {
   return (
-    <Box>
-      <Tabs defaultValue={"photos"}>
+    <Tabs defaultValue={"photos"} className="flex flex-col gap-y-4">
+      <Box>
         <TabsList>
           <TabsTrigger value={"photos"}>Photos ({photos.length})</TabsTrigger>
           <TabsTrigger value={"albums"}>Albums ({albums.length})</TabsTrigger>
         </TabsList>
+      </Box>
+      <Box>
         <TabsContent value={"photos"} className="flex flex-col gap-y-4">
-          <PhotosList photos={photos} />
+          <PhotosList photos={photos}/>
         </TabsContent>
         <TabsContent value={"albums"}>
-          <AlbumsList albums={albums} />
+          <AlbumsList albums={albums}/>
         </TabsContent>
-      </Tabs>
-    </Box>
+      </Box>
+    </Tabs>
   );
 };
 

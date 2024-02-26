@@ -8,8 +8,15 @@ export const MusicMainGetWithSearch = async (search: string) => {
           contains: search,
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }
 
-  return db.music.findMany();
+  return db.music.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 };

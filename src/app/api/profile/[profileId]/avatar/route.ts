@@ -2,8 +2,6 @@ import {NextResponse} from "next/server";
 import {Photo, User} from "@prisma/client";
 import {db} from "@/lib/db";
 
-//todo: переписать связи для более адекватного удаления
-
 export const POST = async (req: Request, {params}: {params: {profileId: string}}) => {
   try {
     const {avatar} = await req.json();

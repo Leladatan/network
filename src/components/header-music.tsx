@@ -29,6 +29,7 @@ import {MusicListAddSong} from "@/actions/music/music-list/music-list-add-song";
 import {useSession} from "next-auth/react";
 import {MusicListDeleteSong} from "@/actions/music/music-list/music-list-delete-song";
 import {isMusicLike} from "@/actions/music/is-music-like";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 const HeaderMusic = ({music}: { music: Music }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -101,16 +102,20 @@ const HeaderMusic = ({music}: { music: Music }) => {
 
   const getVolumeIcon = () => {
     if (volume === 0 || isMute) {
-      return <VolumeX onClick={() => setIsMute(prev => !prev)}
-                      className="cursor-pointer text-primary hover:text-primary-foreground transition" size={30}/>;
+      return <Button variant={"ghost"} className="group" onClick={() => setIsMute(prev => !prev)}>
+        <VolumeX className="text-primary group-hover:text-primary-foreground transition" size={30}/>
+      </Button>;
     }
 
     if (volume < 6) {
-      return <Volume1 onClick={() => setIsMute(prev => !prev)}
-                      className="cursor-pointer text-primary hover:text-primary-foreground transition" size={30}/>;
+      return <Button variant={"ghost"} className="group" onClick={() => setIsMute(prev => !prev)}>
+        <Volume1 className="text-primary group-hover:text-primary-foreground transition" size={30}/>
+      </Button>;
     }
-    return <Volume2 onClick={() => setIsMute(prev => !prev)}
-                    className="cursor-pointer text-primary hover:text-primary-foreground transition" size={30}/>;
+
+    return <Button variant={"ghost"} className="group" onClick={() => setIsMute(prev => !prev)}>
+      <Volume2 className="text-primary group-hover:text-primary-foreground transition" size={30}/>
+    </Button>;
   };
 
   const handleVolume = (value: number[]): void => {
@@ -254,17 +259,48 @@ const HeaderMusic = ({music}: { music: Music }) => {
   return (
     <nav className={cn("flex items-center gap-x-5", color)}>
       <div className="flex items-center justify-center gap-x-4">
-        <Button variant={"ghost"} onClick={onPlayPrev}>
-          <SkipBack size={25}/>
-        </Button>
-        {player.isPlay ?
-          <PauseCircle size={30} onClick={handlePlay} className="cursor-pointer hover:text-primary transition"/>
-          :
-          <PlayCircle size={30} onClick={handlePlay} className="cursor-pointer hover:text-primary transition"/>
-        }
-        <Button variant={"ghost"} onClick={onPlayNext}>
-          <SkipForward size={25}/>
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={"ghost"} className="group" onClick={onPlayPrev}>
+                <SkipBack size={25} className="group-hover:text-primary transition"/>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Skip back
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {player.isPlay ?
+                <Button variant={"ghost"} className="group" onClick={handlePlay}>
+                  <PauseCircle size={30} className="group-hover:text-primary transition"/>
+                </Button>
+                :
+                <Button variant={"ghost"} className="group" onClick={handlePlay}>
+                  <PlayCircle size={30} className="group-hover:text-primary transition"/>
+                </Button>
+              }
+            </TooltipTrigger>
+            <TooltipContent>
+              {player.isPlay ? "Pause" : "Play"}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={"ghost"} className="group" onClick={onPlayNext}>
+                <SkipForward size={25} className="group-hover:text-primary transition"/>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Skip forward
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <Drawer>
         <DrawerTrigger asChild>
@@ -288,17 +324,45 @@ const HeaderMusic = ({music}: { music: Music }) => {
                 />
               </div>
               {!isLikeSong ?
-                <Button variant={"ghost"} className="group" onClick={() => handleAddSong()}>
-                  <PlusCircle className="group-hover:text-primary transition"/>
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant={"ghost"} className="group" onClick={() => handleAddSong()}>
+                        <PlusCircle className="group-hover:text-primary transition"/>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Add favorite music
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 :
-                <Button variant={"ghost"} className="group" onClick={() => handleDeleteSong()}>
-                  <MinusCircle className="group-hover:text-primary transition"/>
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant={"ghost"} className="group" onClick={() => handleDeleteSong()}>
+                        <MinusCircle className="group-hover:text-primary transition"/>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Remove favorite music
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               }
-              <Button variant={"ghost"} onClick={handleRepeat}>
-                <Repeat className={cn("text-primary-foreground", isRepeat && "text-primary")} />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant={"ghost"} className="group" onClick={handleRepeat}>
+                      <Repeat
+                        className={cn("text-primary-foreground group-hover:text-primary transition", isRepeat && "text-primary")}/>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Repeat song
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </DrawerHeader>
             <DrawerMusic musics={player.ids}/>
             <MusicTrackSlider currTime={currTime} time={time} value={seconds} onChange={handleDuration}
@@ -307,17 +371,45 @@ const HeaderMusic = ({music}: { music: Music }) => {
         </DrawerContent>
       </Drawer>
       {!isLikeSong ?
-        <Button variant={"ghost"} className="group" onClick={() => handleAddSong()}>
-          <PlusCircle className="group-hover:text-primary transition"/>
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={"ghost"} className="group" onClick={() => handleAddSong()}>
+                <PlusCircle className="group-hover:text-primary transition"/>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Add favorite music
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         :
-        <Button variant={"ghost"} className="group" onClick={() => handleDeleteSong()}>
-          <MinusCircle className="group-hover:text-primary transition"/>
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={"ghost"} className="group" onClick={() => handleDeleteSong()}>
+                <MinusCircle className="group-hover:text-primary transition"/>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Remove favorite music
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       }
-      <Button variant={"ghost"} onClick={handleRepeat}>
-        <Repeat className={cn("text-primary-foreground", isRepeat && "text-primary")} />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant={"ghost"} className="group" onClick={handleRepeat}>
+              <Repeat
+                className={cn("text-primary-foreground group-hover:text-primary transition", isRepeat && "text-primary")}/>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Repeat song
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </nav>
   );
 };

@@ -111,7 +111,9 @@ const PostCommentItem = ({comment}: {comment: CommentWithUser}) => {
         {isOwnerComment &&
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <MoreHorizontal size={20}/>
+                    <Button variant={"ghost"}>
+                      <MoreHorizontal size={20}/>
+                    </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   {actions.map(action => (

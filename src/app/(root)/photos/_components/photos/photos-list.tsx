@@ -13,7 +13,7 @@ import {PhotosDelete} from "@/actions/photos/photos-delete";
 import {toast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
 
-const PhotosList = ({photos}: {photos: Photo[]}) => {
+const PhotosList = ({photos}: { photos: Photo[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const [isSelect, setIsSelect] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -104,7 +104,8 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {isSelect ?
-                <DropdownMenuItem disabled={isLoading || !(!!selected.length)} className="flex items-center gap-x-2 text-rose-500"
+                <DropdownMenuItem disabled={isLoading || !(!!selected.length)}
+                                  className="flex items-center gap-x-2 text-rose-500"
                                   onClick={() => onOpen("accept", {}, () => handlerDeleted)}>
                   <Trash/>
                   <p>
@@ -156,7 +157,8 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {isSelect ?
-              <DropdownMenuItem disabled={isLoading || !(!!selected.length)} className="flex items-center gap-x-2 text-rose-500"
+              <DropdownMenuItem disabled={isLoading || !(!!selected.length)}
+                                className="flex items-center gap-x-2 text-rose-500"
                                 onClick={() => onOpen("accept", {}, () => handlerDeleted())}>
                 <Trash/>
                 <p>
@@ -176,7 +178,7 @@ const PhotosList = ({photos}: {photos: Photo[]}) => {
         </DropdownMenu>
       </div>
       <div className="columns-7">
-        {photosData.map((photo,index) => (
+        {photosData.map((photo, index) => (
           <div key={index} className="relative cursor-pointer"
                onClick={isSelect ? () => handlerSelected(photo.id) : () => onOpen("photo-view", {photo: photo.photo})}>
             <Image

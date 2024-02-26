@@ -7,14 +7,18 @@ import {SkewLoader} from "react-spinners";
 import {useOrigin} from "@/hooks/use-origin";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
 import Box from "@/components/ui/box";
+import {useParams} from "next/navigation";
 
 const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
   const origin: string = useOrigin();
+  const params = useParams();
 
   return (
     <>
       <Box className="flex flex-col gap-y-2">
-        <h3>Subscriptions: {user.subscriptions.length}</h3>
+        <Link href={`/friends/${params.profileId}`}>
+          <h3>Subscriptions: {user.subscriptions.length}</h3>
+        </Link>
         <Carousel className="w-1/2">
           <CarouselContent>
             {user.subscriptions.map(subscription => (
@@ -26,7 +30,7 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
                       <AvatarFallback><SkewLoader size={10} color="#36d7b7"/></AvatarFallback>
                     </Avatar>
                     {subscription.subscriber.online &&
-                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full"/>}
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full"/>}
                   </Link>
                   <h4 className="truncate w-4/5 text-center">{subscription.subscriber.username}</h4>
                 </div>
@@ -38,7 +42,9 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
         </Carousel>
       </Box>
       <Box className="flex flex-col gap-y-2">
-        <h3>Subscribers: {user.subscribers.length}</h3>
+        <Link href={`/friends/${params.profileId}`}>
+          <h3>Subscribers: {user.subscribers.length}</h3>
+        </Link>
         <Carousel className="w-1/2">
           <CarouselContent>
             {user.subscribers.map(subscriber => (
@@ -50,7 +56,7 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
                       <AvatarFallback><SkewLoader size={10} color="#36d7b7"/></AvatarFallback>
                     </Avatar>
                     {subscriber.user.online &&
-                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full"/>}
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full"/>}
                   </Link>
                   <h4 className="truncate w-4/5 text-center">{subscriber.user.username}</h4>
                 </div>

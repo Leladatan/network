@@ -12,6 +12,8 @@ import PhotoViewModal from "@/components/modals/photo-view-modal";
 import AlbumModal from "@/components/modals/album-modal";
 import MusicAddModal from "@/components/modals/music-add-modal";
 import PlaylistAddModal from "@/components/modals/playlist-add-modal";
+import PlaylistMusicSelectModal from "@/components/modals/playlist-music-select-modal";
+import PlaylistView from "@/components/modals/playlist-view";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -45,6 +47,8 @@ const ModalProvider = () => {
       <AlbumModal/>
       <MusicAddModal/>
       <PlaylistAddModal/>
+      <PlaylistMusicSelectModal/>
+      <PlaylistView/>
     </>
   );
 };
