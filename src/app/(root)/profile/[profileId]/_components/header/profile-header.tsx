@@ -7,7 +7,7 @@ import {useRouter} from "next/navigation";
 import {useEffect, useMemo, useState} from "react";
 import {ProfileAvatarDelete} from "@/actions/profile/avatar/profile-avatar-delete";
 import {toast} from "@/components/ui/use-toast";
-import {LucideIcon, Pencil, Plus, Trash2} from "lucide-react";
+import {Info, LucideIcon, Pencil, Plus, Trash2} from "lucide-react";
 import {useTheme} from "next-themes";
 import {cn} from "@/lib/utils";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
@@ -16,6 +16,7 @@ import {ProfileSubscriberAdd} from "@/actions/profile/subscribe/profile-subscrib
 import {ProfileSubscriberDelete} from "@/actions/profile/subscribe/profile-subscribe-delete";
 import {isFriendThisUser, IsSubscriberThisUser} from "@/actions/is-friend";
 import {useColor} from "@/hooks/use-color";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -98,25 +99,29 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
     label: string,
     icon: LucideIcon,
     isActive: boolean,
-    handler: () => void
+    handler: () => void,
+    color: string
   }[] = useMemo(() => [
     {
       label: "Add",
       icon: Plus,
       isActive: !user.avatar,
       handler: () => onOpen("upload-avatar", {user}),
+      color: ""
     },
     {
       label: "Edit",
       icon: Pencil,
       isActive: !!user.avatar,
       handler: () => onOpen("upload-avatar", {user}),
+      color: ""
     },
     {
       label: "Delete",
       icon: Trash2,
       isActive: !!user.avatar,
       handler: () => onOpen("accept", {user}, () => handlerDelete()),
+      color: "text-rose-500"
     },
   ], [user.avatar]);
 
@@ -170,9 +175,9 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
     <div className={cn("relative", color)}>
       <div
         className={cn("relative flex w-full h-72 rounded-xl", theme !== "light" && "mask")}
-        onMouseOver={isOwner ? handleMouseOver : () => {
+        onMouseOver={isOwner ? handleMouseOver : (): void => {
         }}
-        onMouseOut={isOwner ? handleMouseOut : () => {
+        onMouseOut={isOwner ? handleMouseOut : (): void => {
         }}
         style={user.banner ? {backgroundImage: `url(${user.banner})`, backgroundSize: "cover", backgroundPosition: "center"}
           : {backgroundColor: "transparent"}}
@@ -196,6 +201,18 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
             <p className="text-xl">{user.username}</p>
             <p>{user.status}</p>
           </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button className={"group"} size={"sm"} variant={"ghost"} onClick={() => onOpen("profile-view", {user})}>
+                  <Info size={25} className={"group-hover:text-primary transition"} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                User information
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           {((!isOwner && !isLoading) && !isFriended) ?
             !isSubscribed ?
                 <Button disabled={isLoading} onClick={() => handlerAddSubscriber()}>

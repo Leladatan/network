@@ -48,10 +48,10 @@ const PlaylistMusicSelectModal = () => {
   const form = useForm();
 
   const isSubmitting: boolean = form.formState.isSubmitting;
-  const isOpenModal: boolean = isOpen && type === "playlist-music-select";
+  const isOpenModal: boolean = isOpen && type === "playlist-music-select" || isOpen && type === "playlist-music-select-edit";
 
   const onSelect = (music: Music): void => {
-    if (selected.includes(music)) {
+    if (!!selected.find(item => item.id === music.id)) {
       setSelected(selected.filter(item => item.id !== music.id));
       return;
     }
@@ -67,7 +67,13 @@ const PlaylistMusicSelectModal = () => {
 
       router.refresh();
       onClose();
-      onOpen("playlist-add", {selectedMusic: selected});
+      if (!selectedMusic) {
+        onOpen("playlist-add", {selectedMusic: selected});
+      }
+
+      if (selectedMusic) {
+        onOpen("playlist-edit", {selectedMusic: selected});
+      }
       setSelected([]);
     } catch (e) {
       console.log(e);

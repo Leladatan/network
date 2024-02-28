@@ -1,1 +1,1 @@
-export const maxLengthForPostTitle = 300;
+export const maxLengthForPostTitle = 190;

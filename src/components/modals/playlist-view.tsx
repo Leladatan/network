@@ -35,10 +35,7 @@ const PlaylistView = () => {
   const {onPlay} = usePlay(songs);
   const router = useRouter();
 
-  const isOwner: boolean = currentUser.id === playlist?.userId;
   const isOpenModal: boolean = isOpen && type === "playlist-view";
-
-  // todo: Сделать редактирование плейлиста
 
   const handleDelete = async (id: string): Promise<void> => {
     try {
@@ -83,16 +80,16 @@ const PlaylistView = () => {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent className={cn("p-10", color)}>
+      <DialogContent className={cn("bg-background p-10", color)}>
         <DialogHeader className="flex flex-row items-center justify-between gap-x-2">
           <Image src={playlist.photo} alt={"Image"} width={200} height={200} className="rounded-md"/>
           <div className="flex flex-col gap-y-4 justify-center">
-            <h3 className="text-center">{playlist.title}</h3>
-            <Link href={`/profile/${playlist.user.id}`} className="flex gap-x-2">
+            <h3 className="text-primary text-center">{playlist.title}</h3>
+            <Link href={`/profile/${playlist.user.id}`} onClick={onClose} className="flex gap-x-2">
               <div className="relative">
                 <Avatar className="w-[50px] h-[50px]">
                   <AvatarImage src={playlist.user.avatar!} alt={"User avatar"}/>
-                  <AvatarFallback><SkewLoader color="#36d7b7"/></AvatarFallback>
+                  <AvatarFallback><SkewLoader size={10} color="#36d7b7"/></AvatarFallback>
                 </Avatar>
                 {playlist.user.online &&
                   <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full"/>}

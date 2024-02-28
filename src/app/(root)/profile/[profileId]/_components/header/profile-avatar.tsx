@@ -2,18 +2,20 @@
 
 import {ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger} from "@/components/ui/context-menu";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {User} from "@/types/user";
 import {LucideIcon} from "lucide-react";
 import {SkewLoader} from "react-spinners";
 import {useSession} from "next-auth/react";
+import {cn} from "@/lib/utils";
+import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
 
 const ProfileAvatar = ({user, actions, type = "default"}: {
-  user: User,
-  actions: {
+  user: UserWithSubscribers,
+  actions?: {
     label: string,
     icon: LucideIcon,
     isActive: boolean,
-    handler: () => void
+    handler: () => void,
+    color: string
   }[],
   type: "edit" | "default"
 }) => {
@@ -53,12 +55,12 @@ const ProfileAvatar = ({user, actions, type = "default"}: {
         }
       </ContextMenuTrigger>
       <ContextMenuContent>
-        {actions.map(item => (
+        {actions && actions.map(item => (
           <ContextMenuItem
             key={item.label}
             disabled={!item.isActive}
             onClick={item.handler}
-            className="flex items-center gap-x-2"
+            className={cn("flex items-center gap-x-2", item.color)}
           >
             <item.icon size={15}/>
             {item.label}

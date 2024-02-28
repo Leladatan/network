@@ -1,4 +1,4 @@
-import {Subscriber, Liked_Post} from "@prisma/client";
+import {Subscriber, Liked_Post, GenderType} from "@prisma/client";
 
 export type User = {
   id: string;
@@ -8,6 +8,11 @@ export type User = {
   username: string;
   avatar?: string | null;
   banner?: string | null;
+  first_name?: string;
+  last_name?: string;
+  gender?: GenderType;
+  birthday?: Date;
+  about?: string;
   likes?: number;
   liked?: Liked_Post[];
   subscribers?: Subscriber[];

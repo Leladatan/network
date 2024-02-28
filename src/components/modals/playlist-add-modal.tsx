@@ -20,6 +20,8 @@ import {Music} from "@prisma/client";
 import {useElementOutside} from "@/hooks/use-element-outside";
 import {useUser} from "@/hooks/use-user";
 import {PlaylistAdd} from "@/actions/music/playlist/playlist-add";
+import {PlaylistEdit} from "@/actions/music/playlist/playlist-edit";
+import {PlaylistType} from "@/app/(root)/music/page";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -29,6 +31,7 @@ const formSchema = z.object({
 const PlaylistAddModal = () => {
   const {user} = useUser();
   const [songs, setSongs] = useState<Music[]>([]);
+  const [playlistData, setPlaylistData] = useState<PlaylistType | null>(null);
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const {isOpen, onClose, type, data} = useModal();
   const {selectedMusic, playlist} = data;
@@ -45,6 +48,7 @@ const PlaylistAddModal = () => {
       form.setValue("title", playlist.title);
       form.setValue("photo", playlist.photo);
       setSongs(playlist.musics.map(song => song.music));
+      setPlaylistData(playlist);
     }
   }, [playlist]);
 
@@ -57,17 +61,28 @@ const PlaylistAddModal = () => {
   });
 
   const isSubmitting: boolean = form.formState.isSubmitting;
-  const isOpenModal: boolean = isOpen && type === "playlist-add";
+  const isOpenModal: boolean = isOpen && type === "playlist-add" || isOpen && type === "playlist-edit";
 
   const onSubmit = async (values: z.infer<typeof formSchema>): Promise<void> => {
     try {
-      await PlaylistAdd(user.id, values, songs);
+      if (playlistData && type === "playlist-edit") {
+        console.log("edit");
+        await PlaylistEdit(user.id, playlistData.id, values, songs);
+        toast({
+          title: "The playlist has been updated successfully"
+        });
+      }
 
-      toast({
-        title: "The playlist has been created successfully"
-      });
+      if (type === "playlist-add") {
+        console.log("add");
+        await PlaylistAdd(user.id, values, songs);
+        toast({
+          title: "The playlist has been created successfully"
+        });
+      }
 
       setSongs([]);
+      setPlaylistData(null);
       form.reset();
       router.refresh();
       onClose();
@@ -94,7 +109,8 @@ const PlaylistAddModal = () => {
 
   return (
     <Dialog open={isOpenModal} onOpenChange={onClose}>
-      <DialogContent ref={ref} className={cn("bg-neutral-300 text-black dark:bg-neutral-800 dark:text-white p-0", color)}>
+      <DialogContent ref={ref}
+                     className={cn("bg-neutral-300 text-black dark:bg-neutral-800 dark:text-white p-0", color)}>
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-primary text-center text-2xl font-bold">
             Adding playlist
@@ -122,7 +138,7 @@ const PlaylistAddModal = () => {
                   </FormItem>
                 )}
               />
-              <MultiSelect options={songs} name={"music"} placeholder={"Choose music"}/>
+              <MultiSelect options={songs} name={"music"} type={playlist ? "edit" : "add"} placeholder={"Choose music"}/>
             </div>
             <div className="flex flex-col items-center justify-center text-center mb-3">
               <FormField

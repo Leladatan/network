@@ -30,3 +30,14 @@ export const getFormatData = (date: Date): string => {
 
   return `${isCorrectDay} ${monthName} at ${isCorrectHour}:${isCorrectMinutes}`;
 };
+
+export const getBirthData = (date: Date): string => {
+  const day: string = date.getDate().toString();
+  const month: number = date.getMonth();
+  const year: number = date.getFullYear();
+
+  const isCorrectDay: string = day.length !== 1 ? day : `0${day}`;
+  const monthName: string = getMonthName(month);
+
+  return `${isCorrectDay} ${monthName} ${year}`;
+};

@@ -20,7 +20,7 @@ const MusicsList = ({musics}: {musics: MusicListType[]}) => {
         <Carousel className="w-full">
           <CarouselContent>
             {songs.map(song => (
-              <CarouselItem key={song.id} className="w-full pl-1 md:basis-1/2">
+              <CarouselItem key={song.id} className="w-full md:basis-1/2">
                 <MusicItem music={song} onPlay={() => onPlay(song)} />
               </CarouselItem>
             ))}

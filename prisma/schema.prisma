@@ -8,6 +8,17 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum TypeNotification {
+  friend_add
+  like_add
+  comment_add
+}
+
+enum GenderType {
+  male
+  female
+}
+
 model User {
   id       String  @id @default(uuid())
   username String  @unique
@@ -17,6 +28,12 @@ model User {
   avatar   String  @default("https://utfs.io/f/9c52e5e6-ccc9-42ee-9a67-af8a3329a746-uao75v.jpg")
   banner   String? @db.Text
   password String
+
+  first_name String?
+  last_name  String?
+  gender     GenderType?
+  birthday   DateTime?
+  about      String?
 
   posts       Post[]       @relation("Posts")
   other_posts Post[]       @relation("OtherPosts")
@@ -122,12 +139,6 @@ model Subscriber {
 
   @@index([userId])
   @@index([subscriberId])
-}
-
-enum TypeNotification {
-  friend_add
-  like_add
-  comment_add
 }
 
 model Notification {

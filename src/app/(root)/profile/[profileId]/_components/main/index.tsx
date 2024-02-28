@@ -105,6 +105,9 @@ const ProfileMain = ({posts, user, subscribers_online, musics}: {
                 <Image src={photo} alt={"Image in post"} width={50} height={50}/>
               )}
               <div className="flex items-center justify-end gap-x-4">
+                {value && (
+                  <p className="text-primary-foreground/80">{value.length}/{maxLengthForPostTitle}</p>
+                )}
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>

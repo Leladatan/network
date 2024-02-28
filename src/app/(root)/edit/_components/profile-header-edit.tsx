@@ -14,6 +14,8 @@ import {cn} from "@/lib/utils";
 import {useTheme} from "next-themes";
 import {ProfileOptions} from "@/actions/profile/profile-options";
 import {ProfileBannerDelete} from "@/actions/profile/banner/profile-avatar-delete";
+import {useColor} from "@/hooks/use-color";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 
 const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
   const {onOpen, onClose} = useModal();
@@ -21,6 +23,7 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
   const [status, setStatus] = useState<string>(user.status);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {theme} = useTheme();
+  const {color} = useColor();
 
   const handleStatus = (e: ChangeEvent<HTMLInputElement>): void => {
     setStatus(e.target.value);
@@ -58,7 +61,7 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
 
       router.refresh();
       onClose();
-    } catch (err){
+    } catch (err) {
       console.error(err);
       toast({
         variant: "destructive",
@@ -90,33 +93,41 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
     label: string,
     icon: LucideIcon,
     isActive: boolean,
-    handler: () => void
+    handler: () => void,
+    color: string,
   }[] = useMemo(() => [
     {
       label: "Add",
       icon: Plus,
       isActive: !user.avatar,
       handler: () => onOpen("upload-avatar", {user}),
+      color: ""
     },
     {
       label: "Edit",
       icon: Pencil,
       isActive: !!user.avatar,
       handler: () => onOpen("upload-avatar", {user}),
+      color: ""
     },
     {
       label: "Delete",
       icon: Trash2,
       isActive: !!user.avatar,
       handler: () => onOpen("accept", {user}, () => handlerDelete()),
+      color: "text-rose-500"
     },
   ], [user.avatar]);
 
   return (
-    <div className="relative">
+    <div className={cn("relative", color)}>
       <div
         className={cn("relative flex w-full h-72 rounded-xl", theme !== "light" && "mask")}
-        style={user.banner ? {backgroundImage: `url(${user.banner})`, backgroundSize: "cover", backgroundPosition: "center"}
+        style={user.banner ? {
+            backgroundImage: `url(${user.banner})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }
           : {backgroundColor: "transparent"}}
       >
         <Button
@@ -136,12 +147,34 @@ const ProfileHeaderEdit = ({user}: { user: Omit<User, "password"> }) => {
       </div>
       <div className="absolute -bottom-28 flex gap-x-4 w-full">
         {user.avatar &&
-          <ProfileAvatar user={user} actions={ContextMenuItems} type={"edit"}/>
+          <div className={"relative"}>
+            <ProfileAvatar user={user} actions={ContextMenuItems} type={"edit"}/>
+            <DropdownMenu>
+              <DropdownMenuTrigger className={"absolute bottom-0 right-0"}>
+                <div className={"w-fit h-fit rounded-full p-3 text-primary bg-background"}>
+                  <Pencil size={20}/>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {ContextMenuItems.map(item => (
+                  <DropdownMenuItem
+                    key={item.label}
+                    disabled={!item.isActive}
+                    onClick={item.handler}
+                    className={cn("flex items-center gap-x-2", item.color)}
+                  >
+                    <item.icon size={15}/>
+                    {item.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         }
         <div className="self-end flex items-center justify-between gap-x-2 pb-6 w-full">
           <div className="flex flex-col gap-y-3">
             <p className="text-xl">{user.username}</p>
-            <Input disabled={isLoading} value={status} onChange={handleStatus} placeholder={"How is your mood?"} />
+            <Input disabled={isLoading} value={status} onChange={handleStatus} placeholder={"How is your mood?"}/>
           </div>
           <Button disabled={isLoading} onClick={handleSaveOptions}>
             Save

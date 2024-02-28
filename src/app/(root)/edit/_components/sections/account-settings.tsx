@@ -6,6 +6,7 @@ import {useOrigin} from "@/hooks/use-origin";
 import {Check} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {useModal} from "@/hooks/use-modal";
+import {Label} from "@/components/ui/label";
 
 type Data = {
   username: string;
@@ -29,7 +30,7 @@ const AccountSettings = ({id, email, username}: {id: string, email: string, user
     <section className="flex flex-col gap-y-3">
       <h3>Account</h3>
       <div className="flex flex-col gap-y-2 w-1/2">
-        <label>Your address: {origin}/profile/<span className="underline">{data.id}</span></label>
+        <Label>Your address: {origin}/profile/<span className="underline">{data.id}</span></Label>
         <div className="flex items-center gap-x-5 w-full">
           <Input name="id" value={data.id} onChange={(e) => handleChange(e)} placeholder={"Your id profile"}/>
           {isChangeId && <TooltipProvider>
@@ -49,7 +50,7 @@ const AccountSettings = ({id, email, username}: {id: string, email: string, user
         </div>
       </div>
       <div className="flex flex-col gap-y-2 w-1/2">
-        <label>Your username:</label>
+        <Label>Your username:</Label>
         <div className="flex items-center gap-x-5 w-full">
           <Input name="username" value={data.username} onChange={(e) => handleChange(e)} placeholder={"Your id profile"}/>
           {isChangeUsername && <TooltipProvider>
