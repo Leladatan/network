@@ -90,7 +90,7 @@ const AlbumPhotosList = ({photos}: {photos: Photo[]}) => {
               <Button disabled={isLoading} variant={"ghost"}
                       onClick={() => onOpen("upload-album-photos", {
                         userId: currentUser.id,
-                        albumId: params.albumId as string
+                        albumId: params!.albumId as string
                       })}>
                 Download image
               </Button>
@@ -145,7 +145,7 @@ const AlbumPhotosList = ({photos}: {photos: Photo[]}) => {
             <Button disabled={isLoading} variant={"ghost"}
                     onClick={() => onOpen("upload-album-photos", {
                       userId: currentUser.id,
-                      albumId: params.albumId as string
+                      albumId: params!.albumId as string
                     })}>
               Download image
             </Button>

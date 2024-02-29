@@ -3,9 +3,9 @@ import {db} from "@/lib/db";
 import {Friend, Photo, Subscriber, User} from "@prisma/client";
 import {redirect} from "next/navigation";
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import ProfileIdPage from "@/app/(root)/profile/[profileId]/_components";
 import {exclude} from "@/lib/exclude";
+import {authOptions} from "@/utils/constants/auth";
 
 type Props = {
   params: {

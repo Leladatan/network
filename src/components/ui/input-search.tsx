@@ -15,14 +15,14 @@ export type InputSearchProps = {
 
 const InputSearch = ({name, className, placeholder}: InputSearchProps) => {
   const router = useRouter();
-  const [value, setValue] = useState<string>("");
+  const searchParams = useSearchParams();
+  const [value, setValue] = useState<string>(searchParams && searchParams.get("search") || "");
   const debounceValue: string = useDebounce<string>(value, 500);
   const origin: string = useOrigin();
-  const pathname: string = usePathname();
-  const searchParams = useSearchParams();
+  const pathname: string | null = usePathname();
 
   useEffect((): void => {
-    const current = qs.parse(searchParams.toString());
+    const current = qs.parse(searchParams!.toString());
 
     const query: { search: string } = {
       ...current,

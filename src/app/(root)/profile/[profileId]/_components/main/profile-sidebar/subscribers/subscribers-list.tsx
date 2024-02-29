@@ -16,7 +16,7 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
   return (
     <>
       <Box className="flex flex-col gap-y-2">
-        <Link href={`/friends/${params.profileId}`}>
+        <Link href={`/friends/${params!.profileId}`}>
           <h3>Subscriptions: {user.subscriptions.length}</h3>
         </Link>
         <Carousel className="w-1/2">
@@ -42,7 +42,7 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
         </Carousel>
       </Box>
       <Box className="flex flex-col gap-y-2">
-        <Link href={`/friends/${params.profileId}`}>
+        <Link href={`/friends/${params!.profileId}`}>
           <h3>Subscribers: {user.subscribers.length}</h3>
         </Link>
         <Carousel className="w-1/2">

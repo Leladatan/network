@@ -1,10 +1,10 @@
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {redirect} from "next/navigation";
 import Banner from "@/app/(auth)/_components/banner";
 import type {Metadata} from "next";
 import {RandomBanner} from "@/utils/functions/random-banner";
 import {Banners} from "@/utils/constants/banners";
+import {authOptions} from "@/utils/constants/auth";
 
 export const metadata: Metadata = {
   title: "Sociality auth",

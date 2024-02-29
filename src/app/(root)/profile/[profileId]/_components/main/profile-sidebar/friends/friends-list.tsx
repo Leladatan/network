@@ -15,7 +15,7 @@ const FriendsList = ({user}: {user: UserWithSubscribers}) => {
 
   return (
     <Box className="flex flex-col gap-y-2">
-      <Link href={`/friends/${params.profileId}`}>
+      <Link href={`/friends/${params!.profileId}`}>
         <h3>Friends: {user.friends.length}</h3>
       </Link>
       <Carousel className="w-1/2">

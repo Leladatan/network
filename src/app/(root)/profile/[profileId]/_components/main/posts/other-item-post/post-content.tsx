@@ -59,7 +59,8 @@ const PostContent = ({handlerActions, isEdit, setIsEdit, post, isLoading}: props
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </div>}
+          </div>
+          }
           <div className="self-end flex items-center gap-x-4">
             <TooltipProvider>
               <Tooltip>

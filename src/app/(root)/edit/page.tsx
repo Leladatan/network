@@ -1,10 +1,10 @@
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {User} from "@prisma/client";
 import {db} from "@/lib/db";
 import {exclude} from "@/lib/exclude";
 import {redirect} from "next/navigation";
 import ProfileEditPage from "@/app/(root)/edit/_components";
+import {authOptions} from "@/utils/constants/auth";
 
 const Page = async () => {
   const session = await getServerSession(authOptions);

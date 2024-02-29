@@ -17,7 +17,7 @@ const PhotosList = ({photos}: { photos: Photo[] }) => {
   return (
     <Box className="flex flex-col gap-y-2">
       <h3 className="cursor-pointer"
-          onClick={() => router.push(`${origin}/photos/${params.profileId}`)}>Photos: {photos.length}</h3>
+          onClick={() => router.push(`${origin}/photos/${params!.profileId}`)}>Photos: {photos.length}</h3>
       <Carousel className="w-full">
         <CarouselContent>
           {photos.map(item => (

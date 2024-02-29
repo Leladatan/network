@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {FC, ReactNode, useState} from "react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
@@ -15,7 +15,7 @@ const SupabaseProvider: FC<SupabaseProviderProps> = ({children}) => {
     <SessionContextProvider supabaseClient={supabaseClient}>
       {children}
     </SessionContextProvider>
-  )
-}
+  );
+};
 
 export default SupabaseProvider;

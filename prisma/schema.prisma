@@ -57,6 +57,12 @@ model User {
 
   playlists Playlist[] @relation("UserPlaylist")
 
+  messages          Message[] @relation("MessageAuthor")
+  reveicer_messages Message[] @relation("MessageReceiver")
+
+  chats          Chat[] @relation("UserChat")
+  reveicer_chats Chat[] @relation("ReceiverChat")
+
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
@@ -280,4 +286,44 @@ model Playlist {
   updateAt  DateTime @updatedAt
 
   @@index([userId])
+}
+
+model Message {
+  id      String  @id @default(uuid())
+  message String
+  photo   String?
+
+  authorId String
+  author   User   @relation("MessageAuthor", fields: [authorId], references: [id])
+
+  receiverId String
+  receiver   User   @relation("MessageReceiver", fields: [receiverId], references: [id])
+
+  chatId String
+  chat   Chat   @relation("Chat", fields: [chatId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([receiverId])
+  @@index([chatId])
+}
+
+model Chat {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation("UserChat", fields: [userId], references: [id])
+
+  receiverId String
+  receiver   User   @relation("ReceiverChat", fields: [receiverId], references: [id])
+
+  messages Message[] @relation("Chat")
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([receiverId])
 }

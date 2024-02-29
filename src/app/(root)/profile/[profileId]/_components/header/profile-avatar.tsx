@@ -7,9 +7,10 @@ import {SkewLoader} from "react-spinners";
 import {useSession} from "next-auth/react";
 import {cn} from "@/lib/utils";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
+import {User} from "@prisma/client";
 
 const ProfileAvatar = ({user, actions, type = "default"}: {
-  user: UserWithSubscribers,
+  user: UserWithSubscribers | Omit<User, "password">,
   actions?: {
     label: string,
     icon: LucideIcon,

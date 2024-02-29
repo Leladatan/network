@@ -17,6 +17,7 @@ import {ProfileSubscriberDelete} from "@/actions/profile/subscribe/profile-subsc
 import {isFriendThisUser, IsSubscriberThisUser} from "@/actions/is-friend";
 import {useColor} from "@/hooks/use-color";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {ChatAdd} from "@/actions/chat/chat-add";
 
 const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -38,6 +39,21 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
 
   const handleMouseOut = (): void => {
     setIsHover(false);
+  };
+
+  const handlerWriteMessage = async () => {
+    try {
+      await ChatAdd(currentUser.id, user.id);
+
+      router.refresh();
+      router.push(`/im/${user.id}`);
+    } catch (err) {
+      console.error(err);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong.",
+      });
+    }
   };
 
   const handlerDelete = async () => {
@@ -125,7 +141,7 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
     },
   ], [user.avatar]);
 
-  useEffect(() => {
+  useEffect((): void => {
     (async () => {
       if (isOwner) {
         return;
@@ -148,7 +164,7 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
     })();
   }, []);
 
-  useEffect(() => {
+  useEffect((): void => {
     (async () => {
       if (isOwner) {
         return;
@@ -179,7 +195,11 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
         }}
         onMouseOut={isOwner ? handleMouseOut : (): void => {
         }}
-        style={user.banner ? {backgroundImage: `url(${user.banner})`, backgroundSize: "cover", backgroundPosition: "center"}
+        style={user.banner ? {
+            backgroundImage: `url(${user.banner})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }
           : {backgroundColor: "transparent"}}
       >
         {isHover &&
@@ -204,8 +224,9 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Button className={"group"} size={"sm"} variant={"ghost"} onClick={() => onOpen("profile-view", {user})}>
-                  <Info size={25} className={"group-hover:text-primary transition"} />
+                <Button className={"group"} size={"sm"} variant={"ghost"}
+                        onClick={() => onOpen("profile-view", {user})}>
+                  <Info size={25} className={"group-hover:text-primary transition"}/>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -213,19 +234,24 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          {!isOwner && (
+            <Button onClick={handlerWriteMessage}>
+              Write message
+            </Button>
+          )}
           {((!isOwner && !isLoading) && !isFriended) ?
             !isSubscribed ?
-                <Button disabled={isLoading} onClick={() => handlerAddSubscriber()}>
-                  Subscribe
-                </Button> :
-                <Button disabled={isLoading} onClick={() => handlerDeleteSubscriber()}>
-                  Unsubscribe
-                </Button>
+              <Button disabled={isLoading} onClick={() => handlerAddSubscriber()}>
+                Subscribe
+              </Button> :
+              <Button disabled={isLoading} onClick={() => handlerDeleteSubscriber()}>
+                Unsubscribe
+              </Button>
             :
             (isFriended && !isOwner) &&
-              <Button disabled={isLoading}>
-                Remove from Friends
-              </Button>
+            <Button disabled={isLoading}>
+              Remove from Friends
+            </Button>
           }
           {isOwner &&
             <Button onClick={() => router.push("/edit")}>

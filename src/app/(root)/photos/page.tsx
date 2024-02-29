@@ -1,8 +1,8 @@
 import PhotosPage from "@/app/(root)/photos/_components";
 import {db} from "@/lib/db";
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {Album, Photo} from "@prisma/client";
+import {authOptions} from "@/utils/constants/auth";
 
 export type AlbumWithPhotos = Album & {
   photos: Photo[];

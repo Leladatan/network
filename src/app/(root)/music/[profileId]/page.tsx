@@ -19,7 +19,7 @@ type MusicsType = Cringe & {
 
 const Page = async ({searchParams, params}: { searchParams: { search: string }, params: { profileId: string } }) => {
   const userMusics: MusicListType[] = await MusicListGetWithSearch(params.profileId, searchParams.search);
-  const playlists: PlaylistType[] = await PlaylistGetWithSearch(params.profileId, searchParams.search);
+  const playlists= await PlaylistGetWithSearch(params.profileId, searchParams.search);
 
   return (
     <MusicUserPage userMusics={userMusics} playlists={playlists}/>

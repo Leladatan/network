@@ -1,8 +1,8 @@
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {db} from "@/lib/db";
 import {AlbumWithPhotos} from "@/app/(root)/photos/page";
 import AlbumPhotosList from "@/app/(root)/album/[albumId]/_components/album-photos-list";
+import {authOptions} from "@/utils/constants/auth";
 
 const Page = async ({params}: {params: {albumId: string}}) => {
   const session = await getServerSession(authOptions);

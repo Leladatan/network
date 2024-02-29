@@ -1,11 +1,11 @@
 import Themezation from "@/app/(root)/settings/_components/sections/themezation";
 import DangerZone from "@/app/(root)/settings/_components/sections/danger-zone";
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {db} from "@/lib/db";
 import {signIn} from "next-auth/react";
 import Box from "@/components/ui/box";
 import {exclude} from "@/lib/exclude";
+import {authOptions} from "@/utils/constants/auth";
 
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);

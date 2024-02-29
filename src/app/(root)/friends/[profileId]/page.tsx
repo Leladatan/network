@@ -1,9 +1,9 @@
 import {db} from "@/lib/db";
 import {Friend, Subscriber, User} from "@prisma/client";
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {exclude} from "@/lib/exclude";
 import FriendUserPage from "@/app/(root)/friends/[profileId]/_component";
+import {authOptions} from "@/utils/constants/auth";
 
 export type SubscriberAndUser = Subscriber & {
   user: Omit<User, "password">;

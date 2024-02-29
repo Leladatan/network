@@ -14,7 +14,7 @@ const MusicsList = ({musics}: {musics: MusicListType[]}) => {
   return (
     <>
       <Box className="flex flex-col gap-y-2">
-        <Link href={`/music/${params.profileId}`}>
+        <Link href={`/music/${params!.profileId}`}>
           <h3>Musics: {musics.length}</h3>
         </Link>
         <Carousel className="w-full">

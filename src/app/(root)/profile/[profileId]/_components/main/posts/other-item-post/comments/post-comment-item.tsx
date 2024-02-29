@@ -25,7 +25,7 @@ const PostCommentItem = ({comment}: {comment: CommentWithUser}) => {
 
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const isOwnerComment: boolean = currentUser.id === comment.authorId;
-  const isOwner: boolean = currentUser.id === params.profileId;
+  const isOwner: boolean = currentUser.id === params!.profileId;
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
 

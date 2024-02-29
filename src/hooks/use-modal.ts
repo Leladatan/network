@@ -1,6 +1,6 @@
 import {create} from "zustand";
 import {User} from "@/types/user";
-import {Comment, Music} from "@prisma/client";
+import {Comment, Music, User as UserPrisma} from "@prisma/client";
 import {AlbumWithPhotos} from "@/app/(root)/photos/page";
 import {PlaylistType} from "@/app/(root)/music/page";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
@@ -29,7 +29,7 @@ export type ModalType =
   "comments";
 
 interface ModalData {
-  user?: User | UserWithSubscribers;
+  user?: User | UserWithSubscribers | Omit<UserPrisma, "password">;
   comments?: Comment[];
   userId?: string;
   albumId?: string;

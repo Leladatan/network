@@ -10,13 +10,13 @@ import {cn} from "@/lib/utils";
 
 const Sidebar = () => {
   const {user} = useUser();
-  const pathname: string = usePathname();
+  const pathname: string | null = usePathname();
   const router: { label: string, url: string, icon: LucideIcon, active: boolean }[] = useMemo(() => [
     {
       label: "My profile",
       url: "/profile",
       icon: UserRound,
-      active: pathname.slice(0, 8) === "/profile",
+      active: pathname!.slice(0, 8) === "/profile",
     },
     {
       label: "News",
@@ -40,24 +40,24 @@ const Sidebar = () => {
       label: "Photos",
       url: "/photos",
       icon: Image,
-      active: pathname.slice(0, 7) === "/photos",
+      active: pathname!.slice(0, 7) === "/photos",
     },
     {
       label: "Friends",
       url: "/friends",
       icon: Users,
-      active: pathname.slice(0, 8) === "/friends",
+      active: pathname!.slice(0, 8) === "/friends",
     },
     {
       label: "Settings",
       url: "/settings",
       icon: Settings,
-      active: pathname.slice(0, 9) === "/settings",
+      active: pathname!.slice(0, 9) === "/settings",
     },
   ], [pathname]);
 
   return (
-    <Box className="h-fit sticky top-2">
+    <Box className="h-fit sticky top-2 bg-primary/40">
       <ul className="flex flex-col gap-y-3">
         {router.map(route => (
           <li key={route.url} className="flex items-center gap-x-2 group transition w-full">

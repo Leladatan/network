@@ -25,7 +25,7 @@ const PostHeader = ({post, handlerActions, setIsEdit, isLoading}: props) => {
   const origin: string = useOrigin();
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
 
-  const userId: string = usePathname().slice(9);
+  const userId: string = usePathname()!.slice(9);
   const isOwner: boolean = currentUser.id === userId;
 
   const ContextMenuItems: {

@@ -23,7 +23,7 @@ const Header = ({notifications, count}: { notifications: Notification[], count: 
 
   return (
     <header className="sticky top-2 z-40">
-      <Box className="flex items-center justify-between gap-x-2">
+      <Box className="flex items-center justify-between gap-x-2 bg-primary/40">
         <Logo/>
         {activeMusic && <HeaderMusic music={activeMusic}/>}
         <NotificationHeader notifications={notifications} count={count}/>

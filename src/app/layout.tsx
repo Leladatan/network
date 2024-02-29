@@ -5,10 +5,11 @@ import {NextFont} from "next/dist/compiled/@next/font";
 import {Toaster} from "@/components/ui/toaster";
 import AuthProvider from "@/providers/auth/auth-provider";
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import ThemesProvider from "@/providers/theme/theme-provider";
 import ModalProvider from "@/providers/modal/modal-provider";
 import SupabaseProvider from "@/providers/supabase/supabase-provider";
+import {authOptions} from "@/utils/constants/auth";
+import {SocketProvider} from "@/providers/socket/socket-provider";
 
 const inter: NextFont = Inter({ subsets: ["latin"] });
 
@@ -28,13 +29,15 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider session={session}>
-          <SupabaseProvider>
-          <ThemesProvider>
-            <ModalProvider />
-            <Toaster />
-            {children}
-          </ThemesProvider>
-          </SupabaseProvider>
+          <SocketProvider>
+            <SupabaseProvider>
+              <ThemesProvider>
+                <ModalProvider />
+                <Toaster />
+                {children}
+              </ThemesProvider>
+            </SupabaseProvider>
+          </SocketProvider>
         </AuthProvider>
       </body>
     </html>
