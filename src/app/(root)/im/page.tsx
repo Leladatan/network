@@ -1,9 +1,7 @@
 import MessagesPage from "@/app/(root)/im/_components";
-import {db} from "@/lib/db";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/utils/constants/auth";
 import {Chat, Message, User} from "@prisma/client";
-import {exclude} from "@/lib/exclude";
 import {getChatsWithSearch} from "@/actions/chat/get-chats-with-search";
 
 export type ChatWithUserAndReceiver = Chat & {
