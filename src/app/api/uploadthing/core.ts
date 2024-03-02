@@ -15,7 +15,9 @@ const handleAuth = async () => {
 export const ourFileRouter = {
   avatar: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(() => handleAuth())
-    .onUploadComplete(() => {}),
+    .onUploadComplete(({metadata, file}) => {
+      console.log(metadata, file);
+    }),
   banner: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
