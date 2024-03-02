@@ -92,7 +92,7 @@ const AlbumPhotosList = ({photos}: {photos: Photo[]}) => {
                         userId: currentUser.id,
                         albumId: params!.albumId as string
                       })}>
-                Download image
+                Upload image
               </Button>
             )
             : (
@@ -147,7 +147,7 @@ const AlbumPhotosList = ({photos}: {photos: Photo[]}) => {
                       userId: currentUser.id,
                       albumId: params!.albumId as string
                     })}>
-              Download image
+              Upload image
             </Button>
           )
           : (

@@ -90,7 +90,7 @@ const PhotosModal: FC = () => {
       <DialogContent className={cn("text-primary p-0", color)}>
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-center text-2xl font-bold">
-            Download images
+            Upload images
           </DialogTitle>
           <DialogDescription className="text-center">
             Give your photos for profile. You can always change it later.

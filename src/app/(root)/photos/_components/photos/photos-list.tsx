@@ -87,7 +87,7 @@ const PhotosList = ({photos}: { photos: Photo[] }) => {
           {!isSelect ? (
               <Button disabled={isLoading} variant={"ghost"}
                       onClick={() => onOpen("upload-photos", {userId: currentUser.id})}>
-                Download image
+                Upload image
               </Button>
             )
             : (
@@ -140,7 +140,7 @@ const PhotosList = ({photos}: { photos: Photo[] }) => {
         {!isSelect ? (
             <Button disabled={isLoading} variant={"ghost"}
                     onClick={() => onOpen("upload-photos", {userId: currentUser.id})}>
-              Download image
+              Upload image
             </Button>
           )
           : (
