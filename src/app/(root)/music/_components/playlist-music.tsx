@@ -1,6 +1,5 @@
 "use client";
 
-
 import {Plus} from "lucide-react";
 import {useModal} from "@/hooks/use-modal";
 import {PlaylistType} from "@/app/(root)/music/page";
