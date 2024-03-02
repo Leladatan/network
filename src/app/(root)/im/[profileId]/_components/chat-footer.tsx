@@ -78,7 +78,7 @@ const ChatFooter = ({chat}: { chat: ChatWithUserAndReceiver }) => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant={"ghost"} size={"sm"} onClick={() => setPhoto("")}
+                    <Button variant={"ghost"} type={"button"} size={"sm"} onClick={() => setPhoto("")}
                             className="absolute top-0 right-0 text-rose-500 hover:text-primary-foreground">
                       <XIcon size={20}/>
                     </Button>
