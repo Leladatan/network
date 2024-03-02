@@ -9,7 +9,6 @@ import ThemesProvider from "@/providers/theme/theme-provider";
 import ModalProvider from "@/providers/modal/modal-provider";
 import SupabaseProvider from "@/providers/supabase/supabase-provider";
 import {authOptions} from "@/utils/constants/auth";
-import {SocketProvider} from "@/providers/socket/socket-provider";
 
 const inter: NextFont = Inter({ subsets: ["latin"] });
 
@@ -29,7 +28,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider session={session}>
-          <SocketProvider>
+          {/*<SocketProvider>*/}
             <SupabaseProvider>
               <ThemesProvider>
                 <ModalProvider />
@@ -37,7 +36,7 @@ export default async function RootLayout({
                 {children}
               </ThemesProvider>
             </SupabaseProvider>
-          </SocketProvider>
+          {/*</SocketProvider>*/}
         </AuthProvider>
       </body>
     </html>
