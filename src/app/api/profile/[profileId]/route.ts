@@ -36,11 +36,11 @@ export const PATCH = async (req: Request, {params}: {params: {profileId: string}
         id
       },
       data: {
-        last_name,
-        first_name,
-        gender,
+        last_name: last_name || null,
+        first_name: first_name || null,
+        gender: gender || null,
         birthday: new Date(birthday).toISOString() || null,
-        about
+        about: about || null
       }
     });
 

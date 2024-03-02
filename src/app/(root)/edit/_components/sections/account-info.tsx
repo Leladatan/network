@@ -54,9 +54,7 @@ const AccountInfo = ({id, last_name, first_name, gender, birthday, about}: {
 
   const onSubmit = async (values: z.infer<typeof formSchema>): Promise<void> => {
     try {
-      console.log(values);
-
-      await ProfileEdit(id, values);
+      await ProfileEdit(id, {...values, birthday: birthday ?? null});
 
       toast({
         title: "Your changes have been saved"

@@ -1,18 +1,14 @@
 import axios from "axios";
 import {
-  TypeOf,
-  ZodDate,
-  ZodObject,
-  ZodOptional,
   ZodString,
 } from "zod";
 
-export const ProfileEdit = async (id: string, values: TypeOf<ZodObject<{
-  birthday: ZodOptional<ZodDate>;
-  gender: ZodString;
-  about: ZodString;
-  last_name: ZodString;
-  first_name: ZodString
-}>>) => {
+export const ProfileEdit = async (id: string, values: {
+  birthday: Date | null;
+  gender: ZodString["_output"];
+  about: ZodString["_output"];
+  last_name: ZodString["_output"];
+  first_name: ZodString["_output"]
+}) => {
   return axios.patch(`/api/profile/${id}`, {...values});
 };
