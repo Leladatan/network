@@ -8,6 +8,7 @@ import {PostWithUser} from "@/app/(root)/profile/[profileId]/_components";
 import {toast} from "@/components/ui/use-toast";
 import Loader from "@/components/ui/loader";
 import {useInView} from "react-intersection-observer";
+import Empty from "@/components/empty";
 
 type data<T> = {
   items: T[];
@@ -61,7 +62,7 @@ const FeedPage = () => {
               <div ref={ref}/>
             </>
             :
-            <h3>Not found</h3>
+            <Empty title={"Not found news"}/>
         }
       </div>
     </div>

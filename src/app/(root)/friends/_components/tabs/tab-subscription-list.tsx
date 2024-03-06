@@ -12,6 +12,7 @@ import {useRouter} from "next/navigation";
 import {toast} from "@/components/ui/use-toast";
 import {ProfileSubscriberDelete} from "@/actions/profile/subscribe/profile-subscribe-delete";
 import Box from "@/components/ui/box";
+import Empty from "@/components/empty";
 
 const TabSubscriptionList = ({subscriptions}: { subscriptions: SubscriberAndSubscriber[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -71,11 +72,7 @@ const TabSubscriptionList = ({subscriptions}: { subscriptions: SubscriberAndSubs
           </Box>
         ))
         :
-        <div>
-          <h3>
-            Not found subscriptions
-          </h3>
-        </div>
+        <Empty title={"Not found your subscriptions"}/>
       }
     </div>
   );

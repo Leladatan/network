@@ -6,6 +6,7 @@ import {SkewLoader} from "react-spinners";
 import Link from "next/link";
 import {useOrigin} from "@/hooks/use-origin";
 import Box from "@/components/ui/box";
+import Empty from "@/components/empty";
 
 const TabFriendUserList = ({friends}: { friends: FriendAndUser[] }) => {
   const origin: string = useOrigin();
@@ -29,11 +30,7 @@ const TabFriendUserList = ({friends}: { friends: FriendAndUser[] }) => {
           </Box>
         ))
         :
-        <div>
-          <h3>
-            Not found friends
-          </h3>
-        </div>
+        <Empty title={"Not found friend"} />
       }
     </div>
   );

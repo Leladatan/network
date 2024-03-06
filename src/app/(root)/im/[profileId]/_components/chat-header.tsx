@@ -85,7 +85,7 @@ const ChatHeader = ({receiver, userId, chatId}: {
       </Box>
       {isSearch && (
         <Box className="sticky top-56 z-40 bg-primary/40 flex items-center gap-x-4">
-          <InputSearch name={"search"} placeholder={"Search message..."}/>
+          <InputSearch name={"search"} placeholder={"Search messages..."}/>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>

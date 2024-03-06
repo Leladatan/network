@@ -2,12 +2,11 @@ import {db} from "@/lib/db";
 import {exclude} from "@/lib/exclude";
 import {ChatWithUserAndReceiver} from "@/app/(root)/im/page";
 
-export const getMessagesForChatSearch = async (userId: string, receiverId: string, search: string) => {
+export const getMessagesForChatSearch = async (id: string, search: string) => {
   if (search) {
     const chat: ChatWithUserAndReceiver | null = await db.chat.findFirst({
       where: {
-        userId,
-        receiverId,
+        id,
       },
       include: {
         messages: {
@@ -35,8 +34,7 @@ export const getMessagesForChatSearch = async (userId: string, receiverId: strin
 
   return db.chat.findFirst({
     where: {
-      userId,
-      receiverId,
+      id,
     },
     include: {
       messages: {

@@ -13,6 +13,7 @@ import {useRouter} from "next/navigation";
 import {FriendDelete} from "@/actions/friend/friend-delete";
 import {useSession} from "next-auth/react";
 import Box from "@/components/ui/box";
+import Empty from "@/components/empty";
 
 const TabFriendList = ({friends}: { friends: FriendAndUser[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -72,11 +73,7 @@ const TabFriendList = ({friends}: { friends: FriendAndUser[] }) => {
           </Box>
         ))
         :
-        <div>
-          <h3>
-            Not found friends
-          </h3>
-        </div>
+        <Empty title={"Not found your friends"}/>
       }
     </div>
   );

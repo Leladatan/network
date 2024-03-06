@@ -66,7 +66,6 @@ const PlaylistAddModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>): Promise<void> => {
     try {
       if (playlistData && type === "playlist-edit") {
-        console.log("edit");
         await PlaylistEdit(user.id, playlistData.id, values, songs);
         toast({
           title: "The playlist has been updated successfully"
@@ -74,7 +73,6 @@ const PlaylistAddModal = () => {
       }
 
       if (type === "playlist-add") {
-        console.log("add");
         await PlaylistAdd(user.id, values, songs);
         toast({
           title: "The playlist has been created successfully"

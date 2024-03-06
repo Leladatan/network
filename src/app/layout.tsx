@@ -10,6 +10,7 @@ import ModalProvider from "@/providers/modal/modal-provider";
 import SupabaseProvider from "@/providers/supabase/supabase-provider";
 import {authOptions} from "@/utils/constants/auth";
 import {SocketProvider} from "@/providers/socket/socket-provider";
+import QueryProvider from "@/providers/query/query-provider";
 
 const inter: NextFont = Inter({ subsets: ["latin"] });
 
@@ -30,13 +31,15 @@ export default async function RootLayout({
       <body className={inter.className}>
         <AuthProvider session={session}>
           <SocketProvider>
-            <SupabaseProvider>
-              <ThemesProvider>
-                <ModalProvider />
-                <Toaster />
-                {children}
-              </ThemesProvider>
-            </SupabaseProvider>
+            <QueryProvider>
+              <SupabaseProvider>
+                <ThemesProvider>
+                  <ModalProvider />
+                  <Toaster />
+                  {children}
+                </ThemesProvider>
+              </SupabaseProvider>
+            </QueryProvider>
           </SocketProvider>
         </AuthProvider>
       </body>

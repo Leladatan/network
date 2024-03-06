@@ -5,8 +5,12 @@ import InputSearch from "@/components/ui/input-search";
 import {useSocket} from "@/providers/socket/socket-provider";
 import {ChatWithUserAndReceiver} from "@/app/(root)/im/page";
 import ChatItem from "@/app/(root)/im/_components/chat/chat-item";
+import Empty from "@/components/empty";
 
-const MessagesPage = ({chats}: {chats: ChatWithUserAndReceiver[]}) => {
+const MessagesPage = ({chats, pinned_chats}: {
+  chats: ChatWithUserAndReceiver[],
+  pinned_chats: ChatWithUserAndReceiver[]
+}) => {
   const {isConnected} = useSocket();
 
   return (
@@ -19,15 +23,25 @@ const MessagesPage = ({chats}: {chats: ChatWithUserAndReceiver[]}) => {
         {isConnected ? <p className="text-emerald-500">Connect</p> : <p className="text-rose-500">Disconnect</p>}
       </Box>
 
-      <Box className="hover:bg-primary/15 transition">
-        {!!chats.length ?
-          chats.map(chat => (
-            <ChatItem key={chat.id} chat={chat} />
-          ))
-        :
-          <h3>Chats not found</h3>
-        }
-      </Box>
+      {!!pinned_chats.length &&
+        <Box className="hover:bg-primary/15 transition">
+          {pinned_chats.map(chat => (
+            <ChatItem key={chat.id} chat={chat}/>
+          ))}
+        </Box>
+      }
+
+      {!!chats.length &&
+        <Box className="hover:bg-primary/15 transition">
+          {chats.map(chat => (
+            <ChatItem key={chat.id} chat={chat}/>
+          ))}
+        </Box>
+      }
+
+      {(!(!!pinned_chats) && !(!!chats.length)) && (
+        <Empty title={"Chats not found"}/>
+      )}
     </div>
   );
 };

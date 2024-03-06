@@ -10,8 +10,9 @@ import Link from "next/link";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {SkewLoader} from "react-spinners";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
-import {MoreHorizontal, Trash, UserRoundPlus} from "lucide-react";
+import {MoreHorizontal, UserRoundPlus} from "lucide-react";
 import Box from "@/components/ui/box";
+import Empty from "@/components/empty";
 
 const TabSubscriberList = ({subscribers}: { subscribers: SubscriberAndUser[] }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
@@ -70,11 +71,7 @@ const TabSubscriberList = ({subscribers}: { subscribers: SubscriberAndUser[] }) 
           </Box>
         ))
         :
-        <div>
-          <h3>
-            Not found subscribers
-          </h3>
-        </div>
+        <Empty title={"Not found your subscribers"}/>
       }
     </div>
   );

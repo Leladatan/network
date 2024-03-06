@@ -5,6 +5,7 @@ import Link from "next/link";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {SkewLoader} from "react-spinners";
 import Box from "@/components/ui/box";
+import Empty from "@/components/empty";
 
 const TabSubscriptionUserList = ({subscriptions}: { subscriptions: SubscriberAndSubscriber[] }) => {
   return (
@@ -26,11 +27,7 @@ const TabSubscriptionUserList = ({subscriptions}: { subscriptions: SubscriberAnd
           </Box>
         ))
         :
-        <div>
-          <h3>
-            Not found subscriptions
-          </h3>
-        </div>
+        <Empty title={"Not found subscriptions"}/>
       }
     </div>
   );
