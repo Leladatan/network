@@ -15,10 +15,12 @@ import {toast} from "@/components/ui/use-toast";
 import {useState} from "react";
 import {MessageDelete} from "@/actions/message/message-delete";
 
-const ChatMessage = ({message, user, receiver}: {
+const ChatMessage = ({
+                       message, user, receiver
+                     }: {
   message: Message,
   user: Omit<User, "password">,
-  receiver: Omit<User, "password">
+  receiver: Omit<User, "password">,
 }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,8 +33,13 @@ const ChatMessage = ({message, user, receiver}: {
     try {
       setIsLoading(true);
 
-      await MessageDelete(user.id, message.id);
+      if (!isUserSend) {
+        await MessageDelete(receiver.id, message.id);
+        onClose();
+        return;
+      }
 
+      await MessageDelete(user.id, message.id);
       onClose();
     } catch (err) {
       console.error(err);
@@ -60,7 +67,8 @@ const ChatMessage = ({message, user, receiver}: {
           {message.photo ?
             <div className="flex flex-col gap-y-4">
               <h3 className={cn("w-full break-all", isUserSend ? "text-end" : "text-start")}>{message.message}</h3>
-              <Image src={message.photo} alt={"Message photo"} width={400} height={400} className="rounded-xl" loading={"lazy"}
+              <Image src={message.photo} alt={"Message photo"} width={400} height={400} className="rounded-xl"
+                     loading={"lazy"}
                      onClick={() => onOpen("photo-view", {photo: message.photo!})}/>
             </div>
             :
@@ -77,7 +85,7 @@ const ChatMessage = ({message, user, receiver}: {
         <div
           className={cn("group flex items-center w-full hover:bg-background rounded-xl transition", "justify-end")}>
           <Box
-            className={cn("flex items-center gap-x-3 max-w-3xl cursor-pointer", "flex-row-reverse" )}
+            className={cn("flex items-center gap-x-3 max-w-3xl cursor-pointer", "flex-row-reverse")}
           >
             <Avatar className="self-start w-[50px] h-[50px]"
                     onClick={() => router.push(`/profile/${isUserSend ? user.id : receiver.id}`)}>

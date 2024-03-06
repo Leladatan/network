@@ -12,8 +12,11 @@ import PendingLoader from "@/components/pending-loader";
 import {useInView} from "react-intersection-observer";
 import lodash from "lodash";
 import {useSession} from "next-auth/react";
+import {ChatWithUserAndReceiver} from "@/app/(root)/im/page";
+import {useSearchParams} from "next/navigation";
 
 type ChatMessagesProps = {
+  chat: ChatWithUserAndReceiver;
   chatId: string;
   apiUrl: string;
   socketUrl: string;
@@ -25,14 +28,18 @@ type ChatMessagesProps = {
 };
 
 const Chat = ({
+                chat,
                 chatId,
                 apiUrl,
                 user,
                 receiver,
                 paramKey,
-                paramValue
+                paramValue,
+                socketUrl,
+                socketQuery
               }: ChatMessagesProps) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
+  const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(0);
   const [messages, setMessages] = useState<Message[]>([]);
   const queryKey: string = `chat:${chatId}`;
@@ -51,6 +58,10 @@ const Chat = ({
   });
 
   const getStatus = () => {
+    if (!!searchParams!.get("search")) {
+      return null;
+    }
+
     if (status === "pending") {
       return <PendingLoader/>;
     }
@@ -95,7 +106,14 @@ const Chat = ({
   return (
     <div className="relative flex flex-col gap-y-4 w-full">
       <ChatHeader receiver={isReceiver ? receiver : user} userId={isReceiver ? user.id : receiver.id} chatId={chatId}/>
-      {!!messages.length ?
+      {!!searchParams!.get("search") && (
+        <div className="flex flex-col-reverse items-center justify-end gap-y-3 h-full pb-28">
+          {chat.messages.map(message => (
+            <ChatMessage key={message.id} message={message} user={user} receiver={receiver}/>
+          ))}
+        </div>
+      )}
+      {!!messages.length && !(!!searchParams!.get("search")) ?
         <div className="flex flex-col-reverse items-center justify-end gap-y-3 h-full pb-28">
           {messages.map((message: Message) => (
             <ChatMessage key={message.id} message={message} user={user} receiver={receiver}/>
@@ -105,7 +123,8 @@ const Chat = ({
         :
         getStatus()
       }
-      <ChatFooter userId={isReceiver ? user.id : receiver.id} receiverId={isReceiver ? receiver.id : user.id} apiUrl={"/api/socket/messages"}
+      <ChatFooter userId={isReceiver ? user.id : receiver.id} receiverId={isReceiver ? receiver.id : user.id}
+                  apiUrl={"/api/socket/messages"}
                   query={{chatId: chatId}}/>
     </div>
   );

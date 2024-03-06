@@ -27,6 +27,7 @@ const ChatHeader = ({receiver, userId, chatId}: {
 
   const toggleSearch = (): void => {
     setIsSearch(prev => !prev);
+
   };
 
   const handlerDelete = async () => {
@@ -89,7 +90,7 @@ const ChatHeader = ({receiver, userId, chatId}: {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant={"ghost"} size={"sm"}>
+              <Button variant={"ghost"} size={"sm"} className="flex items-center justify-center">
                 <XIcon size={20} className="text-rose-500" onClick={toggleSearch}/>
               </Button>
             </TooltipTrigger>
