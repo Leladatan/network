@@ -34,8 +34,7 @@ export const SocketProvider = ({
     const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL, {
       path: "/api/socket/io",
       addTrailingSlash: false,
-      transports: ["websocket"],
-      secure: true,
+      // transports: ["websocket"],
     });
 
     socketInstance.on("connect", (): void => {
