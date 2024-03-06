@@ -38,7 +38,7 @@ const TabSubscriberList = ({subscribers}: { subscribers: SubscriberAndUser[] }) 
   };
 
   return (
-    <div className="grid grid-cols-5 gap-5">
+    <div className={!!subscribers.length ? "grid grid-cols-5 gap-5" : "flex items-center"}>
       {!!subscribers.length ?
         subscribers.map(subscriber => (
           <Box key={subscriber.id}>

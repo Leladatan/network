@@ -18,7 +18,7 @@ import Box from "@/components/ui/box";
 const ChatItem = ({chat}: { chat: ChatWithUserAndReceiver }) => {
   const currentUser = useSession().data?.user as { email: string, username: string, id: string };
   const isUser: boolean = chat.userId !== currentUser.id;
-  const isUserSend = chat.messages[0].authorId === chat.userId;
+  const isUserSend = !!chat.messages.length && chat.messages[0].authorId === chat.userId;
   const router = useRouter();
 
   const handlePin = async (): Promise<void> => {

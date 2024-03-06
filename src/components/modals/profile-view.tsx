@@ -29,7 +29,7 @@ const ProfileView = () => {
               <AvatarImage src={user.avatar!}/>
               <AvatarFallback><SkewLoader size={15} color="#36d7b7"/></AvatarFallback>
             </Avatar>
-            {user.online && <div className="absolute bottom-2 right-0 w-4 h-4 rounded-full bg-emerald-500"/>}
+            {user.online && <div className="absolute bottom-2 right-2 w-4 h-4 rounded-full bg-emerald-500"/>}
           </div>
           <div className="self-end flex flex-col items-start gap-y-2 pb-4">
             <h3>{user.username}</h3>

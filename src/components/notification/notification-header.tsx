@@ -28,8 +28,8 @@ const NotificationHeader = ({notifications, count}: { notifications: Notificatio
             </Button>
             {!!count && (
               <>
-                <div className="absolute bg-rose-500 w-3 h-3 -top-1 -right-1 rounded-full cursor-pointer"/>
-                <div className="absolute bg-rose-500 w-3 h-3 -top-1 -right-1 rounded-full animate-ping cursor-pointer"/>
+                <div className="absolute bg-rose-500 w-3 h-3 top-1 right-2 rounded-full cursor-pointer"/>
+                <div className="absolute bg-rose-500 w-3 h-3 top-1 right-2 rounded-full animate-ping cursor-pointer"/>
               </>
             )}
           </div>

@@ -12,7 +12,7 @@ const TabFriendUserList = ({friends}: { friends: FriendAndUser[] }) => {
   const origin: string = useOrigin();
 
   return (
-    <div className="grid grid-cols-5 gap-5">
+    <div className={!!friends.length ? "grid grid-cols-5 gap-5" : "flex items-center"}>
       {!!friends.length ?
         friends.map(friend => (
           <Box key={friend.id}>

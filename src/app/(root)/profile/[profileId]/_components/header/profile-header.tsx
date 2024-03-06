@@ -43,10 +43,10 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
 
   const handlerWriteMessage = async () => {
     try {
-      await ChatAdd(currentUser.id, user.id);
+      const chat = await ChatAdd(currentUser.id, user.id);
 
       router.refresh();
-      router.push(`/im/${user.id}`);
+      router.push(`/im/${chat.id}`);
     } catch (err) {
       console.error(err);
       toast({
@@ -235,7 +235,7 @@ const ProfileHeader = ({user}: { user: UserWithSubscribers }) => {
             </Tooltip>
           </TooltipProvider>
           {!isOwner && (
-            <Button onClick={handlerWriteMessage}>
+            <Button disabled={isLoading} onClick={handlerWriteMessage}>
               Write message
             </Button>
           )}
