@@ -16,7 +16,7 @@ interface FileUploadProps {
 const FileUpload: FC<FileUploadProps> = ({onChange, value, endpoint}) => {
   const fileType: string | undefined = value?.split(".").pop();
 
-  if (value && fileType !== "pdf"  && endpoint === "photos") {
+  if (value && fileType !== "pdf" && endpoint === "photos") {
     return (
       <div className={cn("relative h-60 w-60")}>
           <Image
@@ -106,7 +106,7 @@ const FileUpload: FC<FileUploadProps> = ({onChange, value, endpoint}) => {
         onChange(res?.[0].url);
       }}
       onUploadError={(error: Error): void => {
-        console.log(error);
+        console.log({error});
       }}
     />
   );
