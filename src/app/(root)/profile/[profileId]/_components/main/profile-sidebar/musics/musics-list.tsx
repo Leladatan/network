@@ -5,6 +5,7 @@ import usePlay from "@/hooks/use-play";
 import {MusicListType} from "@/app/(root)/music/page";
 import Link from "next/link";
 import {useParams} from "next/navigation";
+import {ChevronRight} from "lucide-react";
 
 const MusicsList = ({musics}: {musics: MusicListType[]}) => {
   const params = useParams();
@@ -15,7 +16,10 @@ const MusicsList = ({musics}: {musics: MusicListType[]}) => {
     <>
       <Box className="flex flex-col gap-y-2">
         <Link href={`/music/${params!.profileId}`}>
-          <h3>Musics: {musics.length}</h3>
+          <h3 className="flex items-center gap-x-2 hover:text-primary-foreground/75 transition">
+            <ChevronRight size={20} />
+            Musics: {musics.length}
+          </h3>
         </Link>
         <Carousel className="w-full">
           <CarouselContent>

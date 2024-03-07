@@ -8,6 +8,7 @@ import {SkewLoader} from "react-spinners";
 import {useOrigin} from "@/hooks/use-origin";
 import Box from "@/components/ui/box";
 import {useParams} from "next/navigation";
+import {ChevronRight} from "lucide-react";
 
 const FriendsList = ({user}: {user: UserWithSubscribers}) => {
   const origin: string = useOrigin();
@@ -16,7 +17,10 @@ const FriendsList = ({user}: {user: UserWithSubscribers}) => {
   return (
     <Box className="flex flex-col gap-y-2">
       <Link href={`/friends/${params!.profileId}`}>
-        <h3>Friends: {user.friends.length}</h3>
+        <h3 className="flex items-center gap-x-2 hover:text-primary-foreground/75 transition">
+          <ChevronRight size={20} />
+          Friends: {user.friends.length}
+        </h3>
       </Link>
       <Carousel className="w-1/2">
       <CarouselContent>
