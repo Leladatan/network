@@ -11,6 +11,10 @@ export const POST = async (req: Request, {params}: {params: {profileId: string}}
       return new NextResponse("Photo is required", {status: 400});
     }
 
+    if (!name) {
+      return new NextResponse("Name is required", {status: 400});
+    }
+
     const album: Album = await db.album.create({
       data: {
         name,
