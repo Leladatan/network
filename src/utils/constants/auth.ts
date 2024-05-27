@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 
 async function login(credentials: Record<string, string>): Promise<User | null | undefined> {
   try {
+    // Получаем пользователя по электронной почте из формы
     const user: User | null = await db.user.findUnique({
       where: {
         email: credentials.email
@@ -14,11 +15,11 @@ async function login(credentials: Record<string, string>): Promise<User | null |
     if (!user) {
       return null;
     }
-
+    // Проверяем совпадает ли пароль
     const isCorrect: boolean = await bcrypt.compare(credentials.password, user.password);
 
     if (!isCorrect) throw new Error("Wrong Credentials.");
-
+    // Возращаем данные пользователя
     return user;
   } catch (err) {
     console.error(err);
