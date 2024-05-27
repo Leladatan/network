@@ -5,10 +5,11 @@ import Link from "next/link";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {SkewLoader} from "react-spinners";
 import Box from "@/components/ui/box";
+import Empty from "@/components/empty";
 
 const TabSubscriptionUserList = ({subscriptions}: { subscriptions: SubscriberAndSubscriber[] }) => {
   return (
-    <div className="grid grid-cols-5 gap-5">
+    <div className={!!subscriptions.length ? "grid grid-cols-5 gap-5" : "flex items-center"}>
       {!!subscriptions.length ?
         subscriptions.map(subscription => (
           <Box key={subscription.id}>
@@ -26,11 +27,7 @@ const TabSubscriptionUserList = ({subscriptions}: { subscriptions: SubscriberAnd
           </Box>
         ))
         :
-        <div>
-          <h3>
-            Not found subscriptions
-          </h3>
-        </div>
+        <Empty title={"Not found subscriptions"}/>
       }
     </div>
   );

@@ -54,7 +54,7 @@ const MusicPage = ({musics, userMusics, playlists}: {
           </div>
         </TabsContent>
         <TabsContent value={"my"}>
-          <div className="grid grid-cols-4 gap-10">
+          <div className={!!userMusics.length ? "grid grid-cols-4 gap-10" : "flex items-center gap-x-2"}>
             {!!userMusics.length ?
               userMusics.map(song => (
                 <MusicItem key={song.music.id} music={song.music} onPlay={() => onPlay(song.music)}/>

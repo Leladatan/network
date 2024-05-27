@@ -79,7 +79,10 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  variants: {
+    scrollbar: ["responsive"]
+  },
+  plugins: [require("tailwindcss-animate"), require("tailwindcss-scrollbar")],
 } satisfies Config;
 
 export default config;

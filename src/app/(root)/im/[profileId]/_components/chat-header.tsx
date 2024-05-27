@@ -27,6 +27,7 @@ const ChatHeader = ({receiver, userId, chatId}: {
 
   const toggleSearch = (): void => {
     setIsSearch(prev => !prev);
+
   };
 
   const handlerDelete = async () => {
@@ -85,11 +86,11 @@ const ChatHeader = ({receiver, userId, chatId}: {
       </Box>
       {isSearch && (
         <Box className="sticky top-56 z-40 bg-primary/40 flex items-center gap-x-4">
-          <InputSearch name={"search"} placeholder={"Search message..."}/>
+          <InputSearch name={"search"} placeholder={"Search messages..."}/>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant={"ghost"} size={"sm"}>
+              <Button variant={"ghost"} size={"sm"} className="flex items-center justify-center">
                 <XIcon size={20} className="text-rose-500" onClick={toggleSearch}/>
               </Button>
             </TooltipTrigger>

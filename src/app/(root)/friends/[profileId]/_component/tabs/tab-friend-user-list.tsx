@@ -6,12 +6,13 @@ import {SkewLoader} from "react-spinners";
 import Link from "next/link";
 import {useOrigin} from "@/hooks/use-origin";
 import Box from "@/components/ui/box";
+import Empty from "@/components/empty";
 
 const TabFriendUserList = ({friends}: { friends: FriendAndUser[] }) => {
   const origin: string = useOrigin();
 
   return (
-    <div className="grid grid-cols-5 gap-5">
+    <div className={!!friends.length ? "grid grid-cols-5 gap-5" : "flex items-center"}>
       {!!friends.length ?
         friends.map(friend => (
           <Box key={friend.id}>
@@ -29,11 +30,7 @@ const TabFriendUserList = ({friends}: { friends: FriendAndUser[] }) => {
           </Box>
         ))
         :
-        <div>
-          <h3>
-            Not found friends
-          </h3>
-        </div>
+        <Empty title={"Not found friend"} />
       }
     </div>
   );

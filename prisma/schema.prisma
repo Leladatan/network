@@ -198,7 +198,7 @@ model Photo {
   photo String
 
   albumId String?
-  album   Album?  @relation("PhotosInAlbum", fields: [albumId], references: [id])
+  album   Album?  @relation("PhotosInAlbum", onDelete: Cascade, fields: [albumId], references: [id])
 
   type TypePhoto?
 
@@ -263,7 +263,7 @@ model Cringe {
   music   Music  @relation("Playlist", fields: [musicId], references: [id])
 
   playlistId String
-  playlist   Playlist @relation("Cringe", fields: [playlistId], references: [id])
+  playlist   Playlist @relation("Cringe", onDelete: Cascade, fields: [playlistId], references: [id])
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
@@ -300,7 +300,9 @@ model Message {
   receiver   User   @relation("MessageReceiver", fields: [receiverId], references: [id])
 
   chatId String
-  chat   Chat   @relation("Chat", fields: [chatId], references: [id])
+  chat   Chat   @relation("Chat", onDelete: Cascade, fields: [chatId], references: [id])
+
+  isPinned Boolean @default(false)
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
@@ -320,6 +322,8 @@ model Chat {
   receiver   User   @relation("ReceiverChat", fields: [receiverId], references: [id])
 
   messages Message[] @relation("Chat")
+
+  isPinned Boolean @default(false)
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt

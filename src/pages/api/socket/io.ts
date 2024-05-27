@@ -7,8 +7,8 @@
 //
 //   io.on("connection", (socket): void => {
 //     console.log("connect");
-//     socket.on("send-message", (obj): void => {
-//       io.emit("receive-message", obj);
+//     socket.on("send-messages", (obj): void => {
+//       io.emit("receive-messages", obj);
 //     });
 //   });
 //

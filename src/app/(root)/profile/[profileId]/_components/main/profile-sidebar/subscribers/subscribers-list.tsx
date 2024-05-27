@@ -8,6 +8,7 @@ import {useOrigin} from "@/hooks/use-origin";
 import {UserWithSubscribers} from "@/app/(root)/profile/[profileId]/page";
 import Box from "@/components/ui/box";
 import {useParams} from "next/navigation";
+import {ChevronRight} from "lucide-react";
 
 const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
   const origin: string = useOrigin();
@@ -17,7 +18,10 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
     <>
       <Box className="flex flex-col gap-y-2">
         <Link href={`/friends/${params!.profileId}`}>
-          <h3>Subscriptions: {user.subscriptions.length}</h3>
+          <h3 className="flex items-center gap-x-2 hover:text-primary-foreground/75 transition">
+            <ChevronRight size={20} />
+            Subscriptions: {user.subscriptions.length}
+          </h3>
         </Link>
         <Carousel className="w-1/2">
           <CarouselContent>
@@ -43,7 +47,10 @@ const SubscribersList = ({user}: { user: UserWithSubscribers }) => {
       </Box>
       <Box className="flex flex-col gap-y-2">
         <Link href={`/friends/${params!.profileId}`}>
-          <h3>Subscribers: {user.subscribers.length}</h3>
+          <h3 className="flex items-center gap-x-2 hover:text-primary-foreground/75 transition">
+            <ChevronRight size={20} />
+            Subscribers: {user.subscribers.length}
+          </h3>
         </Link>
         <Carousel className="w-1/2">
           <CarouselContent>

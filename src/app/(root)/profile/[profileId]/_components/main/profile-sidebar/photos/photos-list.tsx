@@ -7,6 +7,7 @@ import {useOrigin} from "@/hooks/use-origin";
 import {useParams, useRouter} from "next/navigation";
 import {useModal} from "@/hooks/use-modal";
 import Box from "@/components/ui/box";
+import {ChevronRight} from "lucide-react";
 
 const PhotosList = ({photos}: { photos: Photo[] }) => {
   const params = useParams();
@@ -16,8 +17,13 @@ const PhotosList = ({photos}: { photos: Photo[] }) => {
 
   return (
     <Box className="flex flex-col gap-y-2">
-      <h3 className="cursor-pointer"
-          onClick={() => router.push(`${origin}/photos/${params!.profileId}`)}>Photos: {photos.length}</h3>
+      <h3
+        className="cursor-pointer flex items-center gap-x-2 hover:text-primary-foreground/75 transition"
+          onClick={() => router.push(`${origin}/photos/${params!.profileId}`)}
+      >
+        <ChevronRight size={20} />
+        Photos: {photos.length}
+      </h3>
       <Carousel className="w-full">
         <CarouselContent>
           {photos.map(item => (

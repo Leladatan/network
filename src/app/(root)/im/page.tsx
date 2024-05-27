@@ -12,9 +12,12 @@ export type ChatWithUserAndReceiver = Chat & {
 
 const Page = async ({searchParams}: { searchParams: { search: string } }) => {
   const session = await getServerSession(authOptions);
-  const chats: ChatWithUserAndReceiver[] = await getChatsWithSearch(session.user.id, searchParams.search);
+  let chats: ChatWithUserAndReceiver[] = await getChatsWithSearch(session.user.id, searchParams.search);
 
-  return <MessagesPage chats={chats}/>;
+  const pinned_chats = chats.filter(chat => chat.isPinned);
+  chats = chats.filter(chat => !chat.isPinned);
+  
+  return <MessagesPage chats={chats} pinned_chats={pinned_chats}/>;
 };
 
 export default Page;

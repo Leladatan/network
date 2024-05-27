@@ -13,7 +13,14 @@ export const POST = async (req: Request, {params}: { params: { profileId: string
       },
     });
 
-    if (!chat_find) {
+    const chat_find_second = await db.chat.findFirst({
+      where: {
+        userId: receiverId,
+        receiverId: userId,
+      },
+    });
+
+    if (!chat_find && !chat_find_second) {
       const chat = await db.chat.create({
         data: {
           userId,
@@ -22,6 +29,10 @@ export const POST = async (req: Request, {params}: { params: { profileId: string
       });
 
       return NextResponse.json(chat);
+    }
+
+    if (chat_find_second) {
+      return NextResponse.json(chat_find_second);
     }
 
     return NextResponse.json(chat_find);

@@ -9,7 +9,7 @@ const handleAuth = async () => {
 
   if (!session) throw new Error("Unauthorized");
 
-  return { userId: session };
+  return { userId: session.user.id };
 };
 
 export const ourFileRouter = {

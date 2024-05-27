@@ -7,29 +7,32 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {toast} from "@/components/ui/use-toast";
 import {maxLengthForPostTitle} from "@/utils/constants/maxLength";
-import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {ArrowRight, Paperclip, XIcon} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {useColor} from "@/hooks/use-color";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
-import {ChatWithUserAndReceiver} from "@/app/(root)/im/page";
-import {MessageAdd} from "@/actions/message/message-add";
 import {useModal} from "@/hooks/use-modal";
 import {useRef, useState} from "react";
 import Image from "next/image";
 import Box from "@/components/ui/box";
+import qs from "query-string";
+import axios from "axios";
 
 const formSchema = z.object({
   message: z.string().min(1).max(190),
 });
 
-const ChatFooter = ({chat}: { chat: ChatWithUserAndReceiver }) => {
-  const router = useRouter();
+const ChatFooter = ({
+                      userId,
+                      receiverId,
+                      apiUrl,
+                      query
+                    }: { userId: string, receiverId: string, query: Record<string, any>, apiUrl: string }) => {
   const {color} = useColor();
   const [photo, setPhoto] = useState<string | null>(null);
   const {onOpen} = useModal();
-  const ref= useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
 
   const handlerPhoto = (photo: string | undefined): void => {
     if (!photo) {
@@ -51,14 +54,24 @@ const ChatFooter = ({chat}: { chat: ChatWithUserAndReceiver }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>): Promise<void> => {
     try {
-      await MessageAdd(chat.userId, {...values, photo}, chat.receiverId, chat.id);
+      const url: string = qs.stringifyUrl({
+        url: apiUrl,
+        query,
+      });
+
+      await axios.post(url, {...values, photo, userId, receiverId});
 
       setPhoto("");
       form.reset();
-      router.refresh();
       if (ref.current) {
         ref.current.focus();
       }
+      setTimeout((): void => {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 100);
     } catch (e) {
       console.log(e);
       toast({
@@ -104,7 +117,7 @@ const ChatFooter = ({chat}: { chat: ChatWithUserAndReceiver }) => {
                         name={field.name}
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder={"Enter message..."}
+                        placeholder={"Enter messages..."}
                         maxLength={maxLengthForPostTitle}
                       />
                       <TooltipProvider>
@@ -132,7 +145,8 @@ const ChatFooter = ({chat}: { chat: ChatWithUserAndReceiver }) => {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger>
-                            <Button variant={"ghost"} size={"sm"} className="rounded-full group" disabled={isSubmitting}>
+                            <Button variant={"ghost"} size={"sm"} className="rounded-full group"
+                                    disabled={isSubmitting}>
                               <ArrowRight size={30} className="group-hover:text-primary transition"/>
                             </Button>
                           </TooltipTrigger>
